@@ -24,7 +24,8 @@ module.exports = {
     plugins: [
         new htmlWebpackPlugin({
             hash: true,
-            filename: "./index.html"
+            filename: "./index.html",
+            title: "Roguelite"
         }),
         new copyWebpackPlugin([
             {
