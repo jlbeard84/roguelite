@@ -14,6 +14,16 @@ export class CaveSpriteSheet extends SpriteSheet {
     public bottomRightWall: Sprite;
     public floor: Sprite;
 
+    public topWallIndex: number;
+    public bottomWallIndex: number;
+    public leftWallIndex: number;
+    public rightWallIndex: number;
+    public topLeftWallIndex: number;
+    public topRightWallIndex: number;
+    public bottomLeftWallIndex: number;
+    public bottomRightWallIndex: number;
+    public floorIndex: number;
+
     constructor(resources: Resources) {
 
         const resource = resources.CaveMap;
@@ -26,14 +36,24 @@ export class CaveSpriteSheet extends SpriteSheet {
             16
         );
 
-        this.topWall = this.getSprite(92);
-        this.bottomWall = this.getSprite(60);
-        this.leftWall = this.getSprite(77);
-        this.rightWall = this.getSprite(75);
-        this.topLeftWall = this.getSprite(62);
-        this.topRightWall = this.getSprite(63);
-        this.bottomLeftWall = this.getSprite(78);
-        this.bottomRightWall = this.getSprite(79);
-        this.floor = this.getSprite(0);
+        this.topWallIndex = 9;
+        this.bottomWallIndex = 60;
+        this.leftWallIndex = 77;
+        this.rightWallIndex = 75;
+        this.topLeftWallIndex = 62;
+        this.topRightWallIndex = 63;
+        this.bottomLeftWallIndex = 78;
+        this.bottomRightWallIndex = 79;
+        this.floorIndex = 0;
+
+        this.topWall = this.getSprite(this.topWallIndex);
+        this.bottomWall = this.getSprite(this.bottomWallIndex);
+        this.leftWall = this.getSprite(this.leftWallIndex);
+        this.rightWall = this.getSprite(this.rightWallIndex);
+        this.topLeftWall = this.getSprite(this.topLeftWallIndex);
+        this.topRightWall = this.getSprite(this.topRightWallIndex);
+        this.bottomLeftWall = this.getSprite(this.bottomLeftWallIndex);
+        this.bottomRightWall = this.getSprite(this.bottomRightWallIndex);
+        this.floor = this.getSprite(this.floorIndex);
     }
 }

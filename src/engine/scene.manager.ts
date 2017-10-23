@@ -16,11 +16,13 @@ export class SceneManager {
         loader: RlLoader) {
 
         this.loader = loader;
+
         this.currentScene = new DungeonScene(
-            game.ctx,
+            game,
             this.loader.resources
         );
 
         game.add("DungeonScene", this.currentScene);
+        game.goToScene("DungeonScene");
     }
 }
