@@ -1,4 +1,4 @@
-import { Color, Scene, TileMap, TileSprite } from "excalibur";
+import { Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
 
 import { Hero } from "../actors";
 import { Game } from "../engine";
@@ -9,8 +9,8 @@ export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 
-    private mapRows: number = 35;
-    private mapColumns: number = 50;
+    private mapRows: number = 1000;
+    private mapColumns: number = 1000;
     private spriteWidth: number = 16;
     private spriteHeight: number = 16;
     private caveSpriteSheetName: string = "caveSpriteSheet";
@@ -33,6 +33,11 @@ export class DungeonScene extends Scene {
         console.log(this.hero);
 
         this.add(this.hero);
+
+        const camera = new LockedCamera();
+        camera.setActorToFollow(this.hero);
+
+        this.camera = camera;
 
         const resources = game.loader.resources;
 
@@ -115,5 +120,7 @@ export class DungeonScene extends Scene {
         }
 
         this.add(this.tileMap)
+
+        console.log("Dungeon scene", this);
     }
 }
