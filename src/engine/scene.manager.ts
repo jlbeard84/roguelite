@@ -1,5 +1,6 @@
 import { Scene } from "excalibur";
 
+import { Hero } from "../actors";
 import { Game } from "./game.engine";
 import { RlLoader } from "./rl-loader.loader";
 import { DungeonScene } from "../scenes";
@@ -10,6 +11,7 @@ export class SceneManager {
 
     private game: Game;
     private loader: RlLoader;
+    private hero: Hero;
 
     constructor(
         game: Game,
@@ -17,10 +19,9 @@ export class SceneManager {
 
         this.loader = loader;
 
-        this.currentScene = new DungeonScene(
-            game,
-            this.loader.resources
-        );
+        this.hero = new Hero();
+
+        this.currentScene = new DungeonScene(this.hero);
 
         game.add("DungeonScene", this.currentScene);
         game.goToScene("DungeonScene");

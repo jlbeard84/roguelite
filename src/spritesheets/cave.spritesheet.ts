@@ -26,7 +26,7 @@ export class CaveSpriteSheet extends SpriteSheet {
 
     constructor(resources: Resources) {
 
-        const resource = resources.CaveMap;
+        const resource = resources.CaveMapSheet;
 
         super(
             resource,
@@ -36,14 +36,14 @@ export class CaveSpriteSheet extends SpriteSheet {
             16
         );
 
-        this.topWallIndex = 9;
-        this.bottomWallIndex = 60;
-        this.leftWallIndex = 77;
-        this.rightWallIndex = 75;
-        this.topLeftWallIndex = 62;
-        this.topRightWallIndex = 63;
-        this.bottomLeftWallIndex = 78;
-        this.bottomRightWallIndex = 79;
+        this.topWallIndex = 108;
+        this.bottomWallIndex = 76;
+        this.leftWallIndex = 93;
+        this.rightWallIndex = 91;
+        this.topLeftWallIndex = 78;
+        this.topRightWallIndex = 79;
+        this.bottomLeftWallIndex = 94;
+        this.bottomRightWallIndex = 95;
         this.floorIndex = 0;
 
         this.topWall = this.getSprite(this.topWallIndex);

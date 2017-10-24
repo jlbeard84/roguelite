@@ -1,7 +1,7 @@
 import { Engine } from "excalibur";
 
-import { RlLoader} from "./";
-import { SceneManager } from "./";
+import { Resources } from "../resources";
+import { RlLoader, SceneManager} from "./";
 
 export class Game extends Engine {
 
@@ -18,7 +18,9 @@ export class Game extends Engine {
         });
     }
 
-    public setup(loader: RlLoader) {
+    public setup(
+        loader: RlLoader) {
+
         this.loader = loader;
         
         const sceneManager = new SceneManager(

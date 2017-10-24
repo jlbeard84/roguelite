@@ -1,5 +1,6 @@
-import { Scene, TileMap, TileSprite } from "excalibur";
+import { Color, Scene, TileMap, TileSprite } from "excalibur";
 
+import { Hero } from "../actors";
 import { Game } from "../engine";
 import { Resources } from "../resources";
 import { CaveSpriteSheet } from "../spritesheets";
@@ -15,28 +16,38 @@ export class DungeonScene extends Scene {
     private caveSpriteSheetName: string = "caveSpriteSheet";
     private mapName: string = "caveMap";
 
-    private resources: Resources;
+    private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
+    private hero: Hero;
 
     private tileMap: TileMap;
 
-    constructor(
-        game: Game,
-        resources: Resources) {
+    constructor(hero: Hero) {
         super();
 
-        this.resources = resources;
-
-        this.caveSpriteSheet = new CaveSpriteSheet(this.resources);
+        this.hero = hero;
     }
 
-    public onInitialize() {
+    public onInitialize(game: Game) {
+
+        console.log(this.hero);
+
+        this.add(this.hero);
+
+        const resources = game.loader.resources;
+
+        this.caveSpriteSheet = new CaveSpriteSheet(resources);
+        
+        game.backgroundColor = this.backgroundColor;
 
         console.log("Loading map");
 
+        let x = game.canvasWidth / 2 * -1;
+        let y = game.canvasHeight / 2 * -1;
+
         this.tileMap = new TileMap(
-            -400, 
-            -300, 
+            x, 
+            y, 
             this.spriteWidth, 
             this.spriteHeight, 
             this.mapRows, 
