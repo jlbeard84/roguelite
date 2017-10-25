@@ -12,11 +12,12 @@ export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 
+    //room size is 10x10 as well
     private roomWidth: number = 10;
     private roomHeight: number = 10;
 
-    private mapRows: number = 35;
-    private mapColumns: number = 50;
+    private mapRows: number = this.roomWidth * 10;
+    private mapColumns: number = this.roomHeight * 10;
     private spriteWidth: number = 16;
     private spriteHeight: number = 16;
     private caveSpriteSheetName: string = "caveSpriteSheet";
@@ -132,7 +133,7 @@ export class DungeonScene extends Scene {
             for (let roomCol = 0; roomCol < this.caveRooms[roomRow].length; roomCol++) {
                 for (let tileRow = 0; tileRow < this.caveRooms[roomRow][roomCol].indexArray.length; tileRow++) {
                     for (let tileCol = 0; tileCol < this.caveRooms[roomRow][roomCol].indexArray[tileRow].length; tileCol++) {
-                        let cellIndex = (tileCol + (tileRow * this.mapColumns)) + ((roomCol * this.mapColumns) + (roomRow * this.mapRows));
+                        let cellIndex = tileCol + (tileRow * this.mapColumns) + (this.roomWidth * roomCol) + (Math.pow(this.roomHeight, 3) * roomRow);
 
                         this.tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
                             this.caveSpriteSheetName, 
