@@ -1,5 +1,6 @@
 import { Sprite, SpriteSheet } from "excalibur";
 
+import { CaveType } from "../enums";
 import { Resources } from "../resources";
 
 export class CaveSpriteSheet extends SpriteSheet {
@@ -14,16 +15,6 @@ export class CaveSpriteSheet extends SpriteSheet {
     public bottomRightWall: Sprite;
     public floor: Sprite;
 
-    public topWallIndex: number;
-    public bottomWallIndex: number;
-    public leftWallIndex: number;
-    public rightWallIndex: number;
-    public topLeftWallIndex: number;
-    public topRightWallIndex: number;
-    public bottomLeftWallIndex: number;
-    public bottomRightWallIndex: number;
-    public floorIndex: number;
-
     constructor(resources: Resources) {
 
         const resource = resources.CaveMapSheet;
@@ -36,24 +27,14 @@ export class CaveSpriteSheet extends SpriteSheet {
             16
         );
 
-        this.topWallIndex = 108;
-        this.bottomWallIndex = 76;
-        this.leftWallIndex = 93;
-        this.rightWallIndex = 91;
-        this.topLeftWallIndex = 78;
-        this.topRightWallIndex = 79;
-        this.bottomLeftWallIndex = 94;
-        this.bottomRightWallIndex = 95;
-        this.floorIndex = 0;
-
-        this.topWall = this.getSprite(this.topWallIndex);
-        this.bottomWall = this.getSprite(this.bottomWallIndex);
-        this.leftWall = this.getSprite(this.leftWallIndex);
-        this.rightWall = this.getSprite(this.rightWallIndex);
-        this.topLeftWall = this.getSprite(this.topLeftWallIndex);
-        this.topRightWall = this.getSprite(this.topRightWallIndex);
-        this.bottomLeftWall = this.getSprite(this.bottomLeftWallIndex);
-        this.bottomRightWall = this.getSprite(this.bottomRightWallIndex);
-        this.floor = this.getSprite(this.floorIndex);
+        this.topWall = this.getSprite(CaveType.TopWall);
+        this.bottomWall = this.getSprite(CaveType.BottomWall);
+        this.leftWall = this.getSprite(CaveType.LeftWall);
+        this.rightWall = this.getSprite(CaveType.RightWall);
+        this.topLeftWall = this.getSprite(CaveType.TopLeftWall);
+        this.topRightWall = this.getSprite(CaveType.TopRightWall);
+        this.bottomLeftWall = this.getSprite(CaveType.BottomLeftWall);
+        this.bottomRightWall = this.getSprite(CaveType.BottomRightWall);
+        this.floor = this.getSprite(CaveType.Floor);
     }
 }

@@ -2,6 +2,7 @@ import { Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
 
 import { Hero } from "../actors";
 import { Game } from "../engine";
+import { CaveType } from "../enums";
 import { Resources } from "../resources";
 import { CaveSpriteSheet } from "../spritesheets";
 
@@ -9,8 +10,8 @@ export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 
-    private mapRows: number = 1000;
-    private mapColumns: number = 1000;
+    private mapRows: number = 35;
+    private mapColumns: number = 50;
     private spriteWidth: number = 16;
     private spriteHeight: number = 16;
     private caveSpriteSheetName: string = "caveSpriteSheet";
@@ -72,45 +73,45 @@ export class DungeonScene extends Scene {
                     if (j == 0) {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.topLeftWallIndex);
+                            CaveType.TopLeftWall);
                     } else if(j == this.mapColumns - 1) {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.topRightWallIndex);
+                            CaveType.TopRightWall);
                     } else {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.topWallIndex);
+                            CaveType.TopWall);
                     }
                 }
                 else if (i == this.mapRows - 1){ 
                     if (j == 0) {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.bottomLeftWallIndex);
+                            CaveType.BottomLeftWall);
                     } else if(j == this.mapColumns - 1) {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.bottomRightWallIndex);
+                            CaveType.BottomRightWall);
                     } else {
                         tileSprite = new TileSprite(
                             this.caveSpriteSheetName,
-                            this.caveSpriteSheet.bottomWallIndex);
+                            CaveType.BottomWall);
                     }
                 }
                 else if (j == 0) {
                     tileSprite = new TileSprite(
                         this.caveSpriteSheetName,
-                        this.caveSpriteSheet.leftWallIndex);
+                        CaveType.LeftWall);
                 }
                 else if (j == this.mapColumns - 1) {
                     tileSprite = new TileSprite(
                         this.caveSpriteSheetName,
-                        this.caveSpriteSheet.rightWallIndex);
+                        CaveType.RightWall);
                 } else {
                     tileSprite = new TileSprite(
                         this.caveSpriteSheetName,
-                        this.caveSpriteSheet.floorIndex);
+                        CaveType.Floor);
                 }
 
                 let cellIndex = j + (i * this.mapColumns);
