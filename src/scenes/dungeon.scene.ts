@@ -2,13 +2,18 @@ import { Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
 
 import { Hero } from "../actors";
 import { Game } from "../engine";
+import { Room } from "../entities";
 import { CaveType } from "../enums";
 import { Resources } from "../resources";
+import { CaveRooms } from "../rooms";
 import { CaveSpriteSheet } from "../spritesheets";
 
 export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
+
+    private roomWidth: number = 10;
+    private roomHeight: number = 10;
 
     private mapRows: number = 35;
     private mapColumns: number = 50;
@@ -20,6 +25,7 @@ export class DungeonScene extends Scene {
     private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
     private hero: Hero;
+    private caveRooms: Room<CaveType>[][] = [];
 
     private tileMap: TileMap;
 
@@ -51,6 +57,8 @@ export class DungeonScene extends Scene {
         let x = game.canvasWidth / 2 * -1;
         let y = game.canvasHeight / 2 * -1;
 
+        this.caveRooms = this.generateRooms();
+
         this.tileMap = new TileMap(
             x, 
             y, 
@@ -63,65 +71,98 @@ export class DungeonScene extends Scene {
             this.caveSpriteSheetName,
             this.caveSpriteSheet);
 
-        for (let i = 0; i < this.mapRows; i++) {
+        // for (let i = 0; i < this.mapRows; i++) {
 
-            for( let j = 0; j < this.mapColumns; j++) {
+        //     for( let j = 0; j < this.mapColumns; j++) {
 
-                let tileSprite: TileSprite;
+        //         let tileSprite: TileSprite;
 
-                if (i == 0) {
-                    if (j == 0) {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.TopLeftWall);
-                    } else if(j == this.mapColumns - 1) {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.TopRightWall);
-                    } else {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.TopWall);
+        //         if (i == 0) {
+        //             if (j == 0) {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.TopLeftWall);
+        //             } else if(j == this.mapColumns - 1) {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.TopRightWall);
+        //             } else {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.TopWall);
+        //             }
+        //         }
+        //         else if (i == this.mapRows - 1){ 
+        //             if (j == 0) {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.BottomLeftWall);
+        //             } else if(j == this.mapColumns - 1) {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.BottomRightWall);
+        //             } else {
+        //                 tileSprite = new TileSprite(
+        //                     this.caveSpriteSheetName,
+        //                     CaveType.BottomWall);
+        //             }
+        //         }
+        //         else if (j == 0) {
+        //             tileSprite = new TileSprite(
+        //                 this.caveSpriteSheetName,
+        //                 CaveType.LeftWall);
+        //         }
+        //         else if (j == this.mapColumns - 1) {
+        //             tileSprite = new TileSprite(
+        //                 this.caveSpriteSheetName,
+        //                 CaveType.RightWall);
+        //         } else {
+        //             tileSprite = new TileSprite(
+        //                 this.caveSpriteSheetName,
+        //                 CaveType.Floor);
+        //         }
+
+        //         let cellIndex = j + (i * this.mapColumns);
+
+        //         this.tileMap.getCellByIndex(cellIndex).pushSprite(tileSprite);
+        //     }
+        //}
+
+        for (let roomRow = 0; roomRow < this.caveRooms.length; roomRow++) {
+            for (let roomCol = 0; roomCol < this.caveRooms[roomRow].length; roomCol++) {
+                for (let tileRow = 0; tileRow < this.caveRooms[roomRow][roomCol].indexArray.length; tileRow++) {
+                    for (let tileCol = 0; tileCol < this.caveRooms[roomRow][roomCol].indexArray[tileRow].length; tileCol++) {
+                        let cellIndex = (tileCol + (tileRow * this.mapColumns)) + ((roomCol * this.mapColumns) + (roomRow * this.mapRows));
+
+                        this.tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
+                            this.caveSpriteSheetName, 
+                            this.caveRooms[roomRow][roomCol].indexArray[tileRow][tileCol]));
                     }
                 }
-                else if (i == this.mapRows - 1){ 
-                    if (j == 0) {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.BottomLeftWall);
-                    } else if(j == this.mapColumns - 1) {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.BottomRightWall);
-                    } else {
-                        tileSprite = new TileSprite(
-                            this.caveSpriteSheetName,
-                            CaveType.BottomWall);
-                    }
-                }
-                else if (j == 0) {
-                    tileSprite = new TileSprite(
-                        this.caveSpriteSheetName,
-                        CaveType.LeftWall);
-                }
-                else if (j == this.mapColumns - 1) {
-                    tileSprite = new TileSprite(
-                        this.caveSpriteSheetName,
-                        CaveType.RightWall);
-                } else {
-                    tileSprite = new TileSprite(
-                        this.caveSpriteSheetName,
-                        CaveType.Floor);
-                }
-
-                let cellIndex = j + (i * this.mapColumns);
-
-                this.tileMap.getCellByIndex(cellIndex).pushSprite(tileSprite);
             }
         }
 
         this.add(this.tileMap)
 
         console.log("Dungeon scene", this);
+    }
+
+    private generateRooms(): Room<CaveType>[][] {
+        
+        const rooms: Room<CaveType>[][] = [];
+        
+        for (let i = 0; i < this.roomWidth; i++) {
+
+            let row: Room<CaveType>[] = [];
+
+            for (let j = 0; j < this.roomHeight; j++) {
+                //TODO: make this code smarter once we have more room types defined
+                row.push(CaveRooms.Rooms[0]);
+            }
+
+            rooms.push(row);
+        }
+
+        return rooms;
     }
 }

@@ -1,26 +1,31 @@
+import { Room } from "../entities";
 import { CaveType } from "../enums";
 
 export class CaveRooms {
 
-    public LeftRooms: CaveType[][][] = [
-        //room 1 
-        [
+    public static Rooms: Room<CaveType>[] = [ 
+        new Room<CaveType>([
             [
-                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor
+                CaveType.TopLeftWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopWall, CaveType.TopRightWall
             ], [
-                CaveType.BottomLeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
             ], [
-                CaveType.BlankSpace, CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
             ], [
-                CaveType.TopLeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
             ], [
-                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor
-            ], 
-        ],
-        //room 2
-        [
-
-        ]
-    ]
-
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
+            ], [
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
+            ], [
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
+            ], [
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
+            ], [
+                CaveType.LeftWall, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.Floor, CaveType.RightWall
+            ], [
+                CaveType.BottomLeftWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomWall, CaveType.BottomRightWall
+            ]
+        ])
+    ];
 }

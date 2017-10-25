@@ -42,7 +42,7 @@ export class Game extends Engine {
         // transform back to world space
         newX = (newX / this.canvas.clientWidth) * this.getDrawWidth();
         newY = (newY / this.canvas.clientHeight) * this.getDrawHeight();
-  
+
   
         // transform based on zoom
         // newX = newX - this.getDrawWidth() / 2;
