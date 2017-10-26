@@ -34,8 +34,6 @@ export class Game extends Engine {
 
     public screenToWorldCoordinates(point: Vector): Vector {
 
-        console.log("override");
-
         let newX = point.x;
         let newY = point.y;
   

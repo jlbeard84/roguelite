@@ -12,12 +12,11 @@ export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 
-    //room size is 10x10 as well
-    private roomWidth: number = 10;
-    private roomHeight: number = 10;
+    private roomWidth: number = 20;
+    private roomHeight: number = 20;
 
-    private mapRows: number = this.roomWidth * 10;
-    private mapColumns: number = this.roomHeight * 10;
+    private mapRows: number = this.roomWidth * this.roomWidth;
+    private mapColumns: number = this.roomHeight * this.roomHeight;
     private spriteWidth: number = 16;
     private spriteHeight: number = 16;
     private caveSpriteSheetName: string = "caveSpriteSheet";
@@ -78,9 +77,25 @@ export class DungeonScene extends Scene {
                     for (let tileCol = 0; tileCol < this.caveRooms[roomRow][roomCol].indexArray[tileRow].length; tileCol++) {
                         let cellIndex = tileCol + (tileRow * this.mapColumns) + (this.roomWidth * roomCol) + (Math.pow(this.roomHeight, 3) * roomRow);
 
+                        let tileType = this.caveRooms[roomRow][roomCol].indexArray[tileRow][tileCol]
+
+                        if (roomRow == 0 && tileRow == 0 && tileType == CaveType.Floor) {
+                            tileType = CaveType.TopWall;
+                        } else if (roomRow == this.caveRooms.length - 1 && tileRow == this.roomHeight - 1 && tileType == CaveType.Floor) {
+                            tileType = CaveType.BottomWall;
+                        } else  if (roomCol == 0 && tileCol == 0 && tileType == CaveType.Floor) {
+                            tileType = CaveType.LeftWall;
+                        } else if (roomCol == this.caveRooms[roomRow].length - 1 && tileCol == this.roomWidth - 1 && tileType == CaveType.Floor) {
+                            tileType = CaveType.RightWall;
+                        }
+
                         this.tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
                             this.caveSpriteSheetName, 
-                            this.caveRooms[roomRow][roomCol].indexArray[tileRow][tileCol]));
+                            tileType));
+
+                        this.tileMap.getCellByIndex(cellIndex).solid = tileType == CaveType.Floor 
+                            ? false
+                            : true;
                     }
                 }
             }
