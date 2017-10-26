@@ -52,14 +52,39 @@ export class DungeonScene extends Scene {
         
         game.backgroundColor = this.backgroundColor;
 
-        console.log("Loading map");
+        this.caveRooms = this.generateRooms();
+
+        this.tileMap = this.generateTileMap(game);
+        this.add(this.tileMap)
+
+        this.randomizeStartingPosition();
+    }
+
+    private generateRooms(): Room<CaveType>[][] {
+        
+        const rooms: Room<CaveType>[][] = [];
+        
+        for (let i = 0; i < this.roomWidth; i++) {
+
+            let row: Room<CaveType>[] = [];
+
+            for (let j = 0; j < this.roomHeight; j++) {
+                //TODO: make this code smarter once we have more room types defined
+                row.push(CaveRooms.Rooms[0]);
+            }
+
+            rooms.push(row);
+        }
+
+        return rooms;
+    }
+
+    private generateTileMap(game: Game): TileMap {
 
         let x = game.canvasWidth / 2 * -1;
         let y = game.canvasHeight / 2 * -1;
 
-        this.caveRooms = this.generateRooms();
-
-        this.tileMap = new TileMap(
+        const tileMap = new TileMap(
             x, 
             y, 
             this.spriteWidth, 
@@ -101,27 +126,10 @@ export class DungeonScene extends Scene {
             }
         }
 
-        this.add(this.tileMap)
-
-        console.log("Dungeon scene", this);
+        return tileMap;
     }
 
-    private generateRooms(): Room<CaveType>[][] {
-        
-        const rooms: Room<CaveType>[][] = [];
-        
-        for (let i = 0; i < this.roomWidth; i++) {
-
-            let row: Room<CaveType>[] = [];
-
-            for (let j = 0; j < this.roomHeight; j++) {
-                //TODO: make this code smarter once we have more room types defined
-                row.push(CaveRooms.Rooms[0]);
-            }
-
-            rooms.push(row);
-        }
-
-        return rooms;
+    private randomizeStartingPosition(): void {
+        //TODO:
     }
 }
