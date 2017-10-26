@@ -12,12 +12,11 @@ export class DungeonScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 
-    //room size is 10x10 as well
-    private roomWidth: number = 10;
-    private roomHeight: number = 10;
+    private roomWidth: number = 20;
+    private roomHeight: number = 20;
 
-    private mapRows: number = this.roomWidth * 10;
-    private mapColumns: number = this.roomHeight * 10;
+    private mapRows: number = this.roomWidth * this.roomWidth;
+    private mapColumns: number = this.roomHeight * this.roomHeight;
     private spriteWidth: number = 16;
     private spriteHeight: number = 16;
     private caveSpriteSheetName: string = "caveSpriteSheet";
