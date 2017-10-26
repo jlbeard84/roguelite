@@ -77,9 +77,15 @@ export class DungeonScene extends Scene {
                     for (let tileCol = 0; tileCol < this.caveRooms[roomRow][roomCol].indexArray[tileRow].length; tileCol++) {
                         let cellIndex = tileCol + (tileRow * this.mapColumns) + (this.roomWidth * roomCol) + (Math.pow(this.roomHeight, 3) * roomRow);
 
+                        const tileType = this.caveRooms[roomRow][roomCol].indexArray[tileRow][tileCol]
+
                         this.tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
                             this.caveSpriteSheetName, 
-                            this.caveRooms[roomRow][roomCol].indexArray[tileRow][tileCol]));
+                            tileType));
+
+                        this.tileMap.getCellByIndex(cellIndex).solid = tileType == CaveType.Floor 
+                            ? false
+                            : true;
                     }
                 }
             }

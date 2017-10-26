@@ -1,6 +1,7 @@
 import { Actor, CollisionType, Input } from "excalibur";
 
 import { Game } from "../engine";
+import { Direction } from "../enums";
 import { CharacterIdleSpriteSheet } from "../spritesheets";
 
 export class Hero extends Actor {
@@ -48,26 +49,73 @@ export class Hero extends Actor {
         this.setDrawing("idleDown");
     }
 
-    public update(game: Game) {
+    public update(game: Game, delta: number) {
 
         if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
-            this.y -= this.movementSpeed;
             this.setDrawing("idleUp");
+
+            if(this.passesMapCollision(game, Direction.Up)) {
+                this.y -= this.movementSpeed;
+            }
         }
         
         if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
-            this.y += this.movementSpeed;
             this.setDrawing("idleDown");
+            
+            if(this.passesMapCollision(game, Direction.Down)) {
+                this.y += this.movementSpeed;
+            }
         }
 
         if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
-            this.x -= this.movementSpeed;
             this.setDrawing("idleLeft");
+            
+            if(this.passesMapCollision(game, Direction.Left)) {
+                this.x -= this.movementSpeed;
+            }
         }
 
         if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
-            this.x += this.movementSpeed;
             this.setDrawing("idleRight");
+            
+            if(this.passesMapCollision(game, Direction.Right)) {
+                this.x += this.movementSpeed;
+            }
         }
+    }
+
+    private passesMapCollision(
+        game: Game,
+        direction: Direction): boolean {
+
+        let xOffset: number = 0;
+        let yOffset: number = 0;
+
+        switch(direction) {
+            case Direction.Up:
+                yOffset = this.movementSpeed * -1;
+                break;
+            case Direction.Down:
+                yOffset = this.movementSpeed;
+                break 
+            case Direction.Left:
+                xOffset = this.movementSpeed * -1;
+                break;
+            case Direction.Right:
+                xOffset = this.movementSpeed;
+                break;
+        }
+
+        if (game.currentScene && game.currentScene.tileMaps && game.currentScene.tileMaps.length > 0) {
+            let targetTileMap = game.currentScene.tileMaps[0];
+
+            let targetCell = targetTileMap.getCellByPoint(this.x + xOffset, this.y + yOffset);
+
+            if (!targetCell || targetCell.solid) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
