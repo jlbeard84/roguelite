@@ -6,8 +6,9 @@ import { CharacterIdleSpriteSheet } from "../spritesheets";
 
 export class Hero extends Actor {
 
-    private movementSpeed = 16;
-
+    private movementSpeed: number = 16;
+    private deltaModifier: number = 0.01;
+    
     constructor() {
         super();
 
@@ -51,37 +52,39 @@ export class Hero extends Actor {
 
     public update(game: Game, delta: number) {
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Up) || game.input.keyboard.isHeld(Input.Keys.Up)) {
             this.setDrawing("idleUp");
 
             if(this.passesMapCollision(game, Direction.Up)) {
-                this.y -= this.movementSpeed;
+                this.y -= this.movementSpeed * (delta * this.deltaModifier);;
             }
         }
         
-        if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Down) || game.input.keyboard.isHeld(Input.Keys.Down)) {
             this.setDrawing("idleDown");
             
             if(this.passesMapCollision(game, Direction.Down)) {
-                this.y += this.movementSpeed;
+                this.y += this.movementSpeed * (delta * this.deltaModifier);
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Left) || game.input.keyboard.isHeld(Input.Keys.Left)) {
             this.setDrawing("idleLeft");
             
             if(this.passesMapCollision(game, Direction.Left)) {
-                this.x -= this.movementSpeed;
+                this.x -= this.movementSpeed * (delta * this.deltaModifier);;
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Right) || game.input.keyboard.isHeld(Input.Keys.Right)) {
             this.setDrawing("idleRight");
             
             if(this.passesMapCollision(game, Direction.Right)) {
-                this.x += this.movementSpeed;
+                this.x += this.movementSpeed * (delta * this.deltaModifier);;
             }
         }
+
+        console.log("Delta:", delta);
     }
 
     private passesMapCollision(
