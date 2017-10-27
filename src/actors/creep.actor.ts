@@ -2,9 +2,9 @@ import { Actor, CollisionType, Input } from "excalibur";
 
 import { Game } from "../engine";
 import { Direction } from "../enums";
-import { CharacterIdleSpriteSheet } from "../spritesheets";
+import { CreepSpriteSheet } from "../spritesheets";
 
-export class Hero extends Actor {
+export class Creep extends Actor {
 
     public hasActiveTurn: boolean;
     public turnEndedEventName = "turnEnded";
@@ -23,7 +23,7 @@ export class Hero extends Actor {
 
         const resources = game.loader.resources;
 
-        const characterSheet = new CharacterIdleSpriteSheet(
+        const characterSheet = new CreepSpriteSheet(
             resources);
 
         const idleDownAnimation = characterSheet.getAnimationByIndices(
@@ -62,34 +62,36 @@ export class Hero extends Actor {
 
         let movementAmount: number = 0;
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Up) || game.input.keyboard.isHeld(Input.Keys.Up)) {
+        const movementVector = Math.floor(Math.random() * 4) + 1;
+
+        if (movementVector == Direction.Up) {
             this.setDrawing("idleUp");
 
             if(this.passesMapCollision(game, Direction.Up)) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.y -= movementAmount;
             }
-        }
+        } 
         
-        if (game.input.keyboard.wasPressed(Input.Keys.Down) || game.input.keyboard.isHeld(Input.Keys.Down)) {
+        if (movementVector == Direction.Down) {
             this.setDrawing("idleDown");
             
             if(this.passesMapCollision(game, Direction.Down)) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.y += movementAmount;
             }
-        }
-
-        if (game.input.keyboard.wasPressed(Input.Keys.Left) || game.input.keyboard.isHeld(Input.Keys.Left)) {
+        } 
+        
+        if (movementVector == Direction.Left) {
             this.setDrawing("idleLeft");
             
             if(this.passesMapCollision(game, Direction.Left)) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.x -= movementAmount;
             }
-        }
-
-        if (game.input.keyboard.wasPressed(Input.Keys.Right) || game.input.keyboard.isHeld(Input.Keys.Right)) {
+        } 
+        
+        if (movementVector == Direction.Right) {
             this.setDrawing("idleRight");
             
             if(this.passesMapCollision(game, Direction.Right)) {

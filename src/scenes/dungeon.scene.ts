@@ -1,6 +1,6 @@
-import { Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
+import { Actor, Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
 
-import { Hero } from "../actors";
+import { Creep, Hero } from "../actors";
 import { Game } from "../engine";
 import { Room } from "../entities";
 import { CaveType } from "../enums";
@@ -25,6 +25,7 @@ export class DungeonScene extends Scene {
     private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
     private hero: Hero;
+    private enemies: Creep[] = [];
     private caveRooms: Room<CaveType>[][] = [];
 
     private tileMap: TileMap;
@@ -37,9 +38,30 @@ export class DungeonScene extends Scene {
 
     public onInitialize(game: Game) {
 
-        console.log(this.hero);
-
         this.add(this.hero);
+
+        for (let i = 0; i < 4; i ++) {
+            const enemy = new Creep();
+            enemy.hasActiveTurn = false;
+
+            enemy.on(enemy.turnEndedEventName, () => {
+                let anyActive: boolean = false;
+
+                for (let i = 0; i < this.enemies.length; i++) {
+                    if (this.enemies[i].hasActiveTurn) {
+                        anyActive = true;
+                        break;
+                    }
+                }
+
+                if (!anyActive) {
+                    this.hero.resetTurn();
+                }
+            });
+
+            this.enemies.push(enemy);
+            this.add(enemy);
+        }
 
         const camera = new LockedCamera();
         camera.setActorToFollow(this.hero);
@@ -58,6 +80,14 @@ export class DungeonScene extends Scene {
         this.add(this.tileMap)
 
         this.randomizeStartingPosition();
+
+        this.hero.resetTurn();
+
+        this.hero.on(this.hero.turnEndedEventName ,() => {
+            for (let i = 0; i < this.enemies.length; i++) {
+                this.enemies[i].resetTurn();
+            }
+        });
     }
 
     private generateRooms(): Room<CaveType>[][] {
