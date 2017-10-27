@@ -3,20 +3,18 @@ import { Actor, CollisionType, Input } from "excalibur";
 import { Game } from "../engine";
 import { Direction } from "../enums";
 import { CreepSpriteSheet } from "../spritesheets";
+import { GameCharacterBase } from "./";
+import { LevelSceneBase } from "../scenes";
+import { Hero } from "./";
 
-export class Creep extends Actor {
+export class Creep extends GameCharacterBase {
 
-    public hasActiveTurn: boolean;
-    public turnEndedEventName = "turnEnded";
+    private chaseDistance: number = 640;
+    private idleTurnThreshold: number = 3;
+    private idleTurns: number = 0;
 
-    private movementDistance: number = 0;
-    private movementSpeed: number = 16;
-    private deltaModifier: number = 0.01;
-    
     constructor() {
         super();
-
-        this.collisionType = CollisionType.Active;
     }
 
     public onInitialize(game: Game) {
@@ -60,95 +58,135 @@ export class Creep extends Actor {
             return;
         }
 
+        const currentScene = game.currentScene as LevelSceneBase;
+
+        if (!currentScene || !currentScene.hero) {
+            return;
+        }
+
+        const hero = currentScene.hero;
+
+        const impassibleDirections: Direction[] = []
+        
+        for (let i = 0; i < 4; i++) {
+            if (!this.passesMapCollision(game, i)) {
+                impassibleDirections.push(i);
+            }
+        }
+
+        const movementDirection: Direction = this.determineMovementDirection(
+            hero, 
+            impassibleDirections);
+
         let movementAmount: number = 0;
 
-        const movementVector = Math.floor(Math.random() * 4) + 1;
-
-        if (movementVector == Direction.Up) {
+        if (movementDirection == Direction.Up) {
             this.setDrawing("idleUp");
 
-            if(this.passesMapCollision(game, Direction.Up)) {
+            if (impassibleDirections.indexOf(Direction.Up) == -1) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.y -= movementAmount;
             }
         } 
         
-        if (movementVector == Direction.Down) {
+        if (movementDirection == Direction.Down) {
             this.setDrawing("idleDown");
             
-            if(this.passesMapCollision(game, Direction.Down)) {
+            if (impassibleDirections.indexOf(Direction.Down) == -1) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.y += movementAmount;
             }
         } 
         
-        if (movementVector == Direction.Left) {
+        if (movementDirection == Direction.Left) {
             this.setDrawing("idleLeft");
             
-            if(this.passesMapCollision(game, Direction.Left)) {
+            if (impassibleDirections.indexOf(Direction.Left) == -1) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.x -= movementAmount;
             }
         } 
         
-        if (movementVector == Direction.Right) {
+        if (movementDirection == Direction.Right) {
             this.setDrawing("idleRight");
             
-            if(this.passesMapCollision(game, Direction.Right)) {
+            if (impassibleDirections.indexOf(Direction.Right) == -1) {
                 movementAmount = this.calcMovementAmount(delta);
                 this.x += movementAmount;
             }
         }
 
         this.movementDistance += movementAmount;
+        this.idleTurns++;
 
-        if (this.movementDistance > this.movementSpeed) {
+        if (this.movementDistance > this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {
             this.hasActiveTurn = false;
+            this.idleTurns = 0;
             this.emit(this.turnEndedEventName);
         }
     }
 
-    public resetTurn(): void {
-        this.hasActiveTurn = true;
-        this.movementDistance = 0;
-    }
+    public determineMovementDirection(
+        hero: Hero,
+        impassibleDirections?: Direction[]): Direction {
 
-    private calcMovementAmount(delta: number): number {
-        return this.movementSpeed * (delta * this.deltaModifier);
-    }
-
-    private passesMapCollision(
-        game: Game,
-        direction: Direction): boolean {
-
-        let xOffset: number = 0;
-        let yOffset: number = 0;
-
-        switch(direction) {
-            case Direction.Up:
-                yOffset = this.movementSpeed * -1;
-                break;
-            case Direction.Down:
-                yOffset = this.movementSpeed;
-                break 
-            case Direction.Left:
-                xOffset = this.movementSpeed * -1;
-                break;
-            case Direction.Right:
-                xOffset = this.movementSpeed;
-                break;
+        if (!impassibleDirections) {
+            impassibleDirections = [];
         }
 
-        if (game.currentScene && game.currentScene.tileMaps && game.currentScene.tileMaps.length > 0) {
-            let targetTileMap = game.currentScene.tileMaps[0];
+        let possibleDirections: Direction[] = [];
 
-            let targetCell = targetTileMap.getCellByPoint(this.x + xOffset, this.y + yOffset);
+        const xDistance = this.x - hero.x;
+        const yDistance = this.y - hero.y;
 
-            if (!targetCell || targetCell.solid) {
-                return false;
+        const absXDistance = Math.abs(xDistance);
+        const absYDistance = Math.abs(yDistance);
+
+        if (absYDistance >= absXDistance) {
+            if (yDistance >= this.chaseDistance * -1 || yDistance <= this.chaseDistance) {
+                if (yDistance >= 0 && impassibleDirections.indexOf(Direction.Up) == -1) {
+                    return Direction.Up;
+                }
+
+                if (impassibleDirections.indexOf(Direction.Down) == -1) {
+                    return Direction.Down;
+                }
             }
-        }
+            
+            if (xDistance >= this.chaseDistance * -1 || xDistance <= this.chaseDistance) {
+                if (xDistance >= 0 && impassibleDirections.indexOf(Direction.Left) == -1)  {
+                    return Direction.Left;
+                }
+
+                if (impassibleDirections.indexOf(Direction.Right) == -1) {
+                    return Direction.Right;
+                }
+            }  
+        } 
         
-        return true;
+        if (absXDistance >= absYDistance) {
+            if((xDistance >= this.chaseDistance * -1 || xDistance <= this.chaseDistance)) {
+                if (xDistance >= 0 && impassibleDirections.indexOf(Direction.Left) == -1) {
+                    return Direction.Left;
+                }
+
+                if (impassibleDirections.indexOf(Direction.Right) == -1) {
+                    return Direction.Right;
+                }
+            } 
+            
+            if (yDistance >= this.chaseDistance * -1 || yDistance <= this.chaseDistance) {
+                
+                if (yDistance >= 0 && impassibleDirections.indexOf(Direction.Up) == -1) {
+                    return Direction.Up;
+                }
+    
+                if (impassibleDirections.indexOf(Direction.Down) == -1) {
+                    return Direction.Down;
+                }
+            }
+        } 
+
+        return Math.floor(Math.random() * 4) + 1;
     }
 }
