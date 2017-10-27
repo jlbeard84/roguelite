@@ -6,6 +6,10 @@ import { CharacterIdleSpriteSheet } from "../spritesheets";
 
 export class Hero extends Actor {
 
+    public hasActiveTurn: boolean;
+    public turnEndedEventName = "turnEnded";
+
+    private movementDistance: number = 0;
     private movementSpeed: number = 16;
     private deltaModifier: number = 0.01;
     
@@ -50,13 +54,20 @@ export class Hero extends Actor {
         this.setDrawing("idleDown");
     }
 
-    public update(game: Game, delta: number) {
+    public update(game: Game, delta: number): void {
+
+        if (!this.hasActiveTurn) {
+            return;
+        }
+
+        let movementAmount: number = 0;
 
         if (game.input.keyboard.wasPressed(Input.Keys.Up) || game.input.keyboard.isHeld(Input.Keys.Up)) {
             this.setDrawing("idleUp");
 
             if(this.passesMapCollision(game, Direction.Up)) {
-                this.y -= this.movementSpeed * (delta * this.deltaModifier);;
+                movementAmount = this.calcMovementAmount(delta);
+                this.y -= movementAmount;
             }
         }
         
@@ -64,7 +75,8 @@ export class Hero extends Actor {
             this.setDrawing("idleDown");
             
             if(this.passesMapCollision(game, Direction.Down)) {
-                this.y += this.movementSpeed * (delta * this.deltaModifier);
+                movementAmount = this.calcMovementAmount(delta);
+                this.y += movementAmount;
             }
         }
 
@@ -72,7 +84,8 @@ export class Hero extends Actor {
             this.setDrawing("idleLeft");
             
             if(this.passesMapCollision(game, Direction.Left)) {
-                this.x -= this.movementSpeed * (delta * this.deltaModifier);;
+                movementAmount = this.calcMovementAmount(delta);
+                this.x -= movementAmount;
             }
         }
 
@@ -80,11 +93,26 @@ export class Hero extends Actor {
             this.setDrawing("idleRight");
             
             if(this.passesMapCollision(game, Direction.Right)) {
-                this.x += this.movementSpeed * (delta * this.deltaModifier);;
+                movementAmount = this.calcMovementAmount(delta);
+                this.x += movementAmount;
             }
         }
 
-        console.log("Delta:", delta);
+        this.movementDistance += movementAmount;
+
+        if (this.movementDistance > this.movementSpeed) {
+            this.hasActiveTurn = false;
+            this.emit(this.turnEndedEventName);
+        }
+    }
+
+    public resetTurn(): void {
+        this.hasActiveTurn = true;
+        this.movementDistance = 0;
+    }
+
+    private calcMovementAmount(delta: number): number {
+        return this.movementSpeed * (delta * this.deltaModifier);
     }
 
     private passesMapCollision(

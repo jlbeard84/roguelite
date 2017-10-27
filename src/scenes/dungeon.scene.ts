@@ -58,6 +58,17 @@ export class DungeonScene extends Scene {
         this.add(this.tileMap)
 
         this.randomizeStartingPosition();
+
+        this.hero.resetTurn();
+
+        this.hero.on(this.hero.turnEndedEventName ,() => {
+            //do cool stuff here
+            setTimeout(() => {
+                console.log("turn ended even captured, restarting turn");
+                this.hero.resetTurn();
+            }, 300);
+            
+        });
     }
 
     private generateRooms(): Room<CaveType>[][] {
