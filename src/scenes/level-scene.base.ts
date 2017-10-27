@@ -2,7 +2,7 @@ import { Actor, Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibu
 
 import { Hero } from "../actors";
 
-export abstract class GameSceneBase extends Scene {
+export abstract class LevelSceneBase extends Scene {
     public sceneName: string;
     public hero: Hero;
 

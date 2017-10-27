@@ -3,11 +3,9 @@ import { Actor, CollisionType, Input } from "excalibur";
 import { Game } from "../engine";
 import { Direction } from "../enums";
 import { CreepSpriteSheet } from "../spritesheets";
+import { GameCharacterBase } from "./";
 
-export class Creep extends Actor {
-
-    public hasActiveTurn: boolean;
-    public turnEndedEventName = "turnEnded";
+export class Creep extends GameCharacterBase {
 
     private movementDistance: number = 0;
     private movementSpeed: number = 16;
@@ -15,8 +13,6 @@ export class Creep extends Actor {
     
     constructor() {
         super();
-
-        this.collisionType = CollisionType.Active;
     }
 
     public onInitialize(game: Game) {

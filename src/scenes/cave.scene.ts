@@ -1,4 +1,4 @@
-import { Actor, Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
+import { Actor, Color, LockedCamera, TileMap, TileSprite } from "excalibur";
 
 import { Creep, Hero } from "../actors";
 import { Game } from "../engine";
@@ -7,10 +7,9 @@ import { CaveType } from "../enums";
 import { Resources } from "../resources";
 import { CaveRooms } from "../rooms";
 import { CaveSpriteSheet } from "../spritesheets";
+import { LevelSceneBase } from "./";
 
-export class CaveScene extends Scene {
-
-    public sceneName: string = "DungeonScene";
+export class CaveScene extends LevelSceneBase {
 
     private roomWidth: number = 20;
     private roomHeight: number = 20;
@@ -24,16 +23,16 @@ export class CaveScene extends Scene {
 
     private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
-    private hero: Hero;
     private enemies: Creep[] = [];
     private caveRooms: Room<CaveType>[][] = [];
 
     private tileMap: TileMap;
 
     constructor(hero: Hero) {
-        super();
 
-        this.hero = hero;
+        super(
+            "CaveScene",
+            hero);
     }
 
     public onInitialize(game: Game) {
