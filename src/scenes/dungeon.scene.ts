@@ -92,7 +92,7 @@ export class DungeonScene extends Scene {
             this.mapRows, 
             this.mapColumns);
 
-        this.tileMap.registerSpriteSheet(
+        tileMap.registerSpriteSheet(
             this.caveSpriteSheetName,
             this.caveSpriteSheet);
 
