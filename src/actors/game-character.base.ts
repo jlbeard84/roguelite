@@ -8,12 +8,20 @@ export abstract class GameCharacterBase extends Actor {
     public hasActiveTurn: boolean;
     public turnEndedEventName: string = "turnEnded";
     
+    public hitPoints: number;
+    public maxHitPoints: number;
+
     protected movementDistance: number = 0;
     protected movementSpeed: number = 16;
     protected deltaModifier: number = 0.01;
 
-    constructor() {
+    constructor(maxHitPoints?: number) {
         super();
+
+        if(maxHitPoints) {
+            this.maxHitPoints = maxHitPoints;
+            this.hitPoints = maxHitPoints;
+        }
 
         this.collisionType = CollisionType.Active;
     }

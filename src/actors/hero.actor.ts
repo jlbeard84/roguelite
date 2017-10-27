@@ -5,10 +5,12 @@ import { Direction } from "../enums";
 import { CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
+const startingHeroHitPoints: number = 10;
+
 export class Hero extends GameCharacterBase {
 
     constructor() {
-        super();
+        super(startingHeroHitPoints);
     }
 
     public onInitialize(game: Game) {
