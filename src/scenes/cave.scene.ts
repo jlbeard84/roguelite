@@ -1,4 +1,4 @@
-import { Actor, Color, LockedCamera, TileMap, TileSprite } from "excalibur";
+import { Actor, Cell, Color, LockedCamera, TileMap, TileSprite } from "excalibur";
 
 import { Creep, Hero } from "../actors";
 import { Game } from "../engine";
@@ -58,7 +58,7 @@ export class CaveScene extends LevelSceneBase {
         this.tileMap = this.generateTileMap(game);
         this.add(this.tileMap)
 
-        this.randomizeStartingPosition();
+        this.randomizeStartingPositions();
     }
 
     private generateRooms(): Room<CaveType>[][] {
@@ -130,7 +130,20 @@ export class CaveScene extends LevelSceneBase {
         return tileMap;
     }
 
-    private randomizeStartingPosition(): void {
-        //TODO:
+    private randomizeStartingPositions(): void {
+        
+        let heroIndex: number = -1;
+        const cellLength: number = this.tileMap.data.length;
+
+        while(heroIndex < 0) {
+            const proposedIndex: number = Math.floor(Math.random() * cellLength)
+            var proposedTile: Cell = this.tileMap.data[proposedIndex];
+
+            if(!proposedTile.solid) {
+                heroIndex = proposedIndex;
+                this.hero.x = proposedTile.x;
+                this.hero.y = proposedTile.y;
+            }
+        }
     }
 }
