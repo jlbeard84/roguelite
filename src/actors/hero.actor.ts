@@ -7,10 +7,6 @@ import { GameCharacterBase } from "./";
 
 export class Hero extends GameCharacterBase {
 
-    private movementDistance: number = 0;
-    private movementSpeed: number = 16;
-    private deltaModifier: number = 0.01;
-    
     constructor() {
         super();
     }
@@ -105,44 +101,5 @@ export class Hero extends GameCharacterBase {
     public resetTurn(): void {
         this.hasActiveTurn = true;
         this.movementDistance = 0;
-    }
-
-    private calcMovementAmount(delta: number): number {
-        return this.movementSpeed * (delta * this.deltaModifier);
-    }
-
-    private passesMapCollision(
-        game: Game,
-        direction: Direction): boolean {
-
-        let xOffset: number = 0;
-        let yOffset: number = 0;
-
-        switch(direction) {
-            case Direction.Up:
-                yOffset = this.movementSpeed * -1;
-                break;
-            case Direction.Down:
-                yOffset = this.movementSpeed;
-                break 
-            case Direction.Left:
-                xOffset = this.movementSpeed * -1;
-                break;
-            case Direction.Right:
-                xOffset = this.movementSpeed;
-                break;
-        }
-
-        if (game.currentScene && game.currentScene.tileMaps && game.currentScene.tileMaps.length > 0) {
-            let targetTileMap = game.currentScene.tileMaps[0];
-
-            let targetCell = targetTileMap.getCellByPoint(this.x + xOffset, this.y + yOffset);
-
-            if (!targetCell || targetCell.solid) {
-                return false;
-            }
-        }
-        
-        return true;
     }
 }

@@ -23,7 +23,6 @@ export class CaveScene extends LevelSceneBase {
 
     private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
-    private enemies: Creep[] = [];
     private caveRooms: Room<CaveType>[][] = [];
 
     private tileMap: TileMap;
