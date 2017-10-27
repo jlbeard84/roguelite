@@ -11,6 +11,8 @@ import { LevelSceneBase } from "./";
 
 export class CaveScene extends LevelSceneBase {
 
+    private creepCount = 100;
+
     private roomWidth: number = 20;
     private roomHeight: number = 20;
 
@@ -38,7 +40,7 @@ export class CaveScene extends LevelSceneBase {
 
         this.initializeHero(game);        
 
-        for (let i = 0; i < 4; i ++) {
+        for (let i = 0; i < this.creepCount; i ++) {
             const enemy = new Creep();
 
             this.enemies.push(enemy);
@@ -143,6 +145,30 @@ export class CaveScene extends LevelSceneBase {
                 heroIndex = proposedIndex;
                 this.hero.x = proposedTile.x;
                 this.hero.y = proposedTile.y;
+            }
+        }
+
+        const totalEnemies = this.enemies.length;
+        const enemyIndexes: number[] = [];
+
+        for(let i = 0; i < totalEnemies; i++) {
+
+            let enemyPlaced: boolean = false;
+
+            while(!enemyPlaced) {
+                const proposedEnemyIndex: number = Math.floor(Math.random() * cellLength)
+                var proposedEnemyTile: Cell = this.tileMap.data[proposedEnemyIndex];
+
+                if(!proposedEnemyTile.solid && 
+                    proposedEnemyIndex != heroIndex && 
+                    enemyIndexes.indexOf(proposedEnemyIndex) == -1) {
+
+                    this.enemies[i].x = proposedEnemyTile.x;
+                    this.enemies[i].y = proposedEnemyTile.y;
+
+                    enemyPlaced = true;
+                    enemyIndexes.push(proposedEnemyIndex);
+                }
             }
         }
     }
