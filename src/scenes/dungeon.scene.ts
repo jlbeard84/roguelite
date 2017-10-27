@@ -114,11 +114,11 @@ export class DungeonScene extends Scene {
                             tileType = CaveType.RightWall;
                         }
 
-                        this.tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
+                        tileMap.getCellByIndex(cellIndex).pushSprite(new TileSprite(
                             this.caveSpriteSheetName, 
                             tileType));
 
-                        this.tileMap.getCellByIndex(cellIndex).solid = tileType == CaveType.Floor 
+                        tileMap.getCellByIndex(cellIndex).solid = tileType == CaveType.Floor 
                             ? false
                             : true;
                     }
