@@ -36,35 +36,16 @@ export class CaveScene extends LevelSceneBase {
 
     public onInitialize(game: Game) {
 
-        this.add(this.hero);
+        this.initializeHero(game);        
 
         for (let i = 0; i < 4; i ++) {
             const enemy = new Creep();
-            enemy.hasActiveTurn = false;
-
-            enemy.on(enemy.turnEndedEventName, () => {
-                let anyActive: boolean = false;
-
-                for (let i = 0; i < this.enemies.length; i++) {
-                    if (this.enemies[i].hasActiveTurn) {
-                        anyActive = true;
-                        break;
-                    }
-                }
-
-                if (!anyActive) {
-                    this.hero.resetTurn();
-                }
-            });
 
             this.enemies.push(enemy);
             this.add(enemy);
         }
 
-        const camera = new LockedCamera();
-        camera.setActorToFollow(this.hero);
-
-        this.camera = camera;
+        this.activateEnemies();
 
         const resources = game.loader.resources;
 
@@ -78,14 +59,6 @@ export class CaveScene extends LevelSceneBase {
         this.add(this.tileMap)
 
         this.randomizeStartingPosition();
-
-        this.hero.resetTurn();
-
-        this.hero.on(this.hero.turnEndedEventName ,() => {
-            for (let i = 0; i < this.enemies.length; i++) {
-                this.enemies[i].resetTurn();
-            }
-        });
     }
 
     private generateRooms(): Room<CaveType>[][] {
