@@ -8,7 +8,7 @@ import { Resources } from "../resources";
 import { CaveRooms } from "../rooms";
 import { CaveSpriteSheet } from "../spritesheets";
 
-export class DungeonScene extends Scene {
+export class CaveScene extends Scene {
 
     public sceneName: string = "DungeonScene";
 

@@ -3,7 +3,7 @@ import { Scene } from "excalibur";
 import { Hero } from "../actors";
 import { Game } from "./game.engine";
 import { RlLoader } from "./rl-loader.loader";
-import { DungeonScene } from "../scenes";
+import { CaveScene } from "../scenes";
 
 export class SceneManager {
     
@@ -21,9 +21,9 @@ export class SceneManager {
 
         this.hero = new Hero();
 
-        this.currentScene = new DungeonScene(this.hero);
+        this.currentScene = new CaveScene(this.hero);
 
-        game.add("DungeonScene", this.currentScene);
-        game.goToScene("DungeonScene");
+        game.add("CaveScene", this.currentScene);
+        game.goToScene("CaveScene");
     }
 }

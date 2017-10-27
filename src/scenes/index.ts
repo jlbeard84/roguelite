@@ -1,1 +1,1 @@
-export { DungeonScene } from "./dungeon.scene";
+export { CaveScene } from "./cave.scene";
