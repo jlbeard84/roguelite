@@ -1,4 +1,4 @@
-import { Actor, Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibur";
+import { Actor, Color, LockedCamera, TileMap, TileSprite } from "excalibur";
 
 import { Creep, Hero } from "../actors";
 import { Game } from "../engine";
@@ -7,10 +7,9 @@ import { CaveType } from "../enums";
 import { Resources } from "../resources";
 import { CaveRooms } from "../rooms";
 import { CaveSpriteSheet } from "../spritesheets";
+import { LevelSceneBase } from "./";
 
-export class DungeonScene extends Scene {
-
-    public sceneName: string = "DungeonScene";
+export class CaveScene extends LevelSceneBase {
 
     private roomWidth: number = 20;
     private roomHeight: number = 20;
@@ -24,49 +23,29 @@ export class DungeonScene extends Scene {
 
     private backgroundColor: Color = new Color(32, 23, 41);
     private caveSpriteSheet: CaveSpriteSheet;
-    private hero: Hero;
-    private enemies: Creep[] = [];
     private caveRooms: Room<CaveType>[][] = [];
 
     private tileMap: TileMap;
 
     constructor(hero: Hero) {
-        super();
 
-        this.hero = hero;
+        super(
+            "CaveScene",
+            hero);
     }
 
     public onInitialize(game: Game) {
 
-        this.add(this.hero);
+        this.initializeHero(game);        
 
         for (let i = 0; i < 4; i ++) {
             const enemy = new Creep();
-            enemy.hasActiveTurn = false;
-
-            enemy.on(enemy.turnEndedEventName, () => {
-                let anyActive: boolean = false;
-
-                for (let i = 0; i < this.enemies.length; i++) {
-                    if (this.enemies[i].hasActiveTurn) {
-                        anyActive = true;
-                        break;
-                    }
-                }
-
-                if (!anyActive) {
-                    this.hero.resetTurn();
-                }
-            });
 
             this.enemies.push(enemy);
             this.add(enemy);
         }
 
-        const camera = new LockedCamera();
-        camera.setActorToFollow(this.hero);
-
-        this.camera = camera;
+        this.activateEnemies();
 
         const resources = game.loader.resources;
 
@@ -80,14 +59,6 @@ export class DungeonScene extends Scene {
         this.add(this.tileMap)
 
         this.randomizeStartingPosition();
-
-        this.hero.resetTurn();
-
-        this.hero.on(this.hero.turnEndedEventName ,() => {
-            for (let i = 0; i < this.enemies.length; i++) {
-                this.enemies[i].resetTurn();
-            }
-        });
     }
 
     private generateRooms(): Room<CaveType>[][] {
