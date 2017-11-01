@@ -2,17 +2,23 @@ import { Actor, Color, LockedCamera, Scene, TileMap, TileSprite } from "excalibu
 
 import { Game } from "../engine";
 import { Hero, GameCharacterBase } from "../actors";
+import { GameFont } from "../spritefonts";
 
 export abstract class LevelSceneBase extends Scene {
     public sceneName: string;
     public hero: Hero;
     public enemies: GameCharacterBase[] = [];
+    public gameFont: GameFont;
 
     constructor(sceneName: string, hero: Hero) {
         super();
 
         this.sceneName = sceneName;
         this.hero = hero;
+    }
+
+    protected initializeFont(game: Game) {
+        this.gameFont = new GameFont(game.loader.resources);
     }
 
     protected initializeHero(game: Game) {

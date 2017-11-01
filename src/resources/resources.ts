@@ -5,11 +5,13 @@ export class Resources {
     public CaveMapSheet: Texture = new Texture("/assets/cave.png");
     public CharacterSheet: Texture = new Texture("/assets/character.png");
     public CreepSheet: Texture = new Texture("/assets/creep.png");
+    public GameFontSheet: Texture = new Texture("/assets/game-font.png");
 
     private resources: ILoadable[] = [
         this.CaveMapSheet,
         this.CharacterSheet,
-        this.CreepSheet
+        this.CreepSheet,
+        this.GameFontSheet
     ]
 
     public load(loader: Loader): void {
