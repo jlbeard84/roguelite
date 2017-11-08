@@ -76,7 +76,7 @@ export class Creep extends GameCharacterBase {
 
         const impassibleDirections: Direction[] = []
         
-        for (let i = 0; i < 4; i++) {
+        for (let i = 1; i < 5; i++) {
             if (!this.passesMapCollision(game, i)) {
                 impassibleDirections.push(i);
             }
