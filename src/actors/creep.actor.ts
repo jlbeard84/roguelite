@@ -9,12 +9,20 @@ import { Hero } from "./";
 
 export class Creep extends GameCharacterBase {
 
+    private lowHitPointRange = 4;
+    private highHitPointRange = 5;
+
     private chaseDistance: number = 640;
     private idleTurnThreshold: number = 3;
     private idleTurns: number = 0;
 
     constructor() {
         super();
+
+        const hp = Math.floor(Math.random() * (this.highHitPointRange - this.lowHitPointRange)) + this.lowHitPointRange;
+
+        this.maxHitPoints = hp;
+        this.hitPoints = hp;
     }
 
     public onInitialize(game: Game) {
@@ -68,7 +76,7 @@ export class Creep extends GameCharacterBase {
 
         const impassibleDirections: Direction[] = []
         
-        for (let i = 0; i < 4; i++) {
+        for (let i = 1; i < 5; i++) {
             if (!this.passesMapCollision(game, i)) {
                 impassibleDirections.push(i);
             }

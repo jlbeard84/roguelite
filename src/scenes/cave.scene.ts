@@ -1,4 +1,4 @@
-import { Actor, Cell, Color, LockedCamera, TileMap, TileSprite } from "excalibur";
+import { Actor, Cell, Color, Label, LockedCamera, TileMap, TileSprite } from "excalibur";
 
 import { Creep, Hero } from "../actors";
 import { Game } from "../engine";
@@ -38,6 +38,7 @@ export class CaveScene extends LevelSceneBase {
 
     public onInitialize(game: Game) {
 
+        this.initializeFont(game);
         this.initializeHero(game);        
 
         for (let i = 0; i < this.creepCount; i ++) {
@@ -61,6 +62,10 @@ export class CaveScene extends LevelSceneBase {
         this.add(this.tileMap)
 
         this.randomizeStartingPositions();
+
+        const testLabel = new Label("HP:", 0, 0, null, this.gameFont);
+
+        this.add(testLabel);
     }
 
     private generateRooms(): Room<CaveType>[][] {

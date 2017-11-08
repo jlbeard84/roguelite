@@ -1,0 +1,1 @@
+export { GameFont } from "./game-font.spritefont";
