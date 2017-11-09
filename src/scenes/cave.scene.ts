@@ -8,6 +8,8 @@ import { Resources } from "../resources";
 import { CaveRooms } from "../rooms";
 import { CaveSpriteSheet } from "../spritesheets";
 import { LevelSceneBase } from "./";
+import { HudActor } from "../actors/hud-actor.actor";
+import { HudHp } from "../actors/hud-hp.actor";
 
 export class CaveScene extends LevelSceneBase {
 
@@ -63,9 +65,10 @@ export class CaveScene extends LevelSceneBase {
 
         this.randomizeStartingPositions();
 
-        const testLabel = new Label("HP:", 0, 0, null, this.gameFont);
+        const hpLabel = new HudHp(
+            this.gameFont);
 
-        this.add(testLabel);
+        this.add(hpLabel);
     }
 
     private generateRooms(): Room<CaveType>[][] {
