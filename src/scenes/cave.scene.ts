@@ -96,8 +96,8 @@ export class CaveScene extends LevelSceneBase {
         let y = game.canvasHeight / 2 * -1;
 
         const tileMap = new TileMap(
-            x, 
-            y, 
+            0, 
+            0, 
             this.spriteWidth, 
             this.spriteHeight, 
             this.mapRows, 

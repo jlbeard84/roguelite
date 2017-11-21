@@ -31,28 +31,4 @@ export class Game extends Engine {
 
         this.sceneManager = sceneManager;
     }
-
-    public screenToWorldCoordinates(point: Vector): Vector {
-
-        let newX = point.x;
-        let newY = point.y;
-  
-        // transform back to world space
-        newX = (newX / this.canvas.clientWidth) * this.getDrawWidth();
-        newY = (newY / this.canvas.clientHeight) * this.getDrawHeight();
-
-  
-        // transform based on zoom
-        // newX = newX - this.getDrawWidth() / 2;
-        newY = newY - this.getDrawHeight() / 2;
-  
-        // shift by focus
-        if (this.currentScene && this.currentScene.camera) {
-           var focus = this.currentScene.camera.getFocus();
-           newX += focus.x;
-           newY += focus.y;
-        }
-  
-        return new Vector(Math.floor(newX), Math.floor(newY));
-    }
 }
