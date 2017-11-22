@@ -10,12 +10,12 @@ export class HudHp extends HudActor {
         spriteFont: SpriteFont) {
 
         super(
-            2.1,
-            2.4,
+            5,
+            6,
             "HP:",
             spriteFont,
-            4,
-            4
+            2,
+            2
         );
     }
 

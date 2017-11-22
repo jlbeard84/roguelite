@@ -13,7 +13,7 @@ export class Creep extends GameCharacterBase {
     private highHitPointRange = 5;
 
     private chaseDistance: number = 640;
-    private idleTurnThreshold: number = 3;
+    private idleTurnThreshold: number = 1;
     private idleTurns: number = 0;
 
     constructor() {
@@ -80,19 +80,21 @@ export class Creep extends GameCharacterBase {
             if (!this.passesMapCollision(game, i)) {
                 impassibleDirections.push(i);
             }
+            if (!this.passesActorCollision(game, i)){
+                impassibleDirections.push(i);
+            }
         }
 
         const movementDirection: Direction = this.determineMovementDirection(
             hero, 
             impassibleDirections);
 
-        let movementAmount: number = 0;
+        let movementAmount: number = 16;
 
         if (movementDirection == Direction.Up) {
             this.setDrawing("idleUp");
 
             if (impassibleDirections.indexOf(Direction.Up) == -1) {
-                movementAmount = this.calcMovementAmount(delta);
                 this.y -= movementAmount;
             }
         } 
@@ -101,7 +103,6 @@ export class Creep extends GameCharacterBase {
             this.setDrawing("idleDown");
             
             if (impassibleDirections.indexOf(Direction.Down) == -1) {
-                movementAmount = this.calcMovementAmount(delta);
                 this.y += movementAmount;
             }
         } 
@@ -110,7 +111,6 @@ export class Creep extends GameCharacterBase {
             this.setDrawing("idleLeft");
             
             if (impassibleDirections.indexOf(Direction.Left) == -1) {
-                movementAmount = this.calcMovementAmount(delta);
                 this.x -= movementAmount;
             }
         } 
@@ -119,12 +119,11 @@ export class Creep extends GameCharacterBase {
             this.setDrawing("idleRight");
             
             if (impassibleDirections.indexOf(Direction.Right) == -1) {
-                movementAmount = this.calcMovementAmount(delta);
                 this.x += movementAmount;
             }
         }
 
-        this.movementDistance += movementAmount;
+        this.movementDistance = movementAmount;
         this.idleTurns++;
 
         if (this.movementDistance > this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {

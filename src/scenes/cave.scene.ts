@@ -16,7 +16,7 @@ export class CaveScene extends LevelSceneBase {
     private creepCount = 100;
 
     private roomWidth: number = 20;
-    private roomHeight: number = 20;
+    private roomHeight: number = 20; 
 
     private mapRows: number = this.roomWidth * this.roomWidth;
     private mapColumns: number = this.roomHeight * this.roomHeight;
