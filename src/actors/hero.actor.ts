@@ -71,7 +71,7 @@ export class Hero extends GameCharacterBase {
             }
         }
         
-        if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
+        if (playerInput.downPressed) {
             this.setDrawing("idleDown");
             
             if(this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
@@ -80,7 +80,7 @@ export class Hero extends GameCharacterBase {
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
+        if (playerInput.leftPressed) {
             this.setDrawing("idleLeft");
             
             if(this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
@@ -89,7 +89,7 @@ export class Hero extends GameCharacterBase {
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
+        if (playerInput.rightPressed) {
             this.setDrawing("idleRight");
             
             if(this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
