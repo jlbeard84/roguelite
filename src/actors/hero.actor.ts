@@ -2,7 +2,7 @@ import { Actor, CollisionType, Input } from "excalibur";
 
 import { Game } from "../engine";
 import { Direction } from "../enums";
-import { CharacterIdleSpriteSheet } from "../spritesheets";
+import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
 const startingHeroHitPoints: number = 10;
@@ -19,6 +19,9 @@ export class Hero extends GameCharacterBase {
 
         const characterSheet = new CharacterIdleSpriteSheet(
             resources);
+
+        const attackSheet = new CharacterAttackSpriteSheet(
+            resources)
 
         const idleDownAnimation = characterSheet.getAnimationByIndices(
             game, 
@@ -40,10 +43,35 @@ export class Hero extends GameCharacterBase {
             characterSheet.getIdleLeftIndices(),
             240);
 
+        const attackDownAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getDownIndices(),
+            240);
+
+        const attackRightAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getRightIndices(),
+            240);
+
+        const attackUpAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getUpIndices(),
+            240);
+
+        const attackLeftAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getLeftIndices(),
+            240);
+
         this.addDrawing("idleDown", idleDownAnimation);
         this.addDrawing("idleRight", idleRightAnimation);
         this.addDrawing("idleUp", idleUpAnimation);
         this.addDrawing("idleLeft", idleLeftAnimation);
+
+        this.addDrawing("attackDown", attackDownAnimation);
+        this.addDrawing("attackRight", attackRightAnimation);
+        this.addDrawing("attackUp", attackUpAnimation);
+        this.addDrawing("attackKeft", attackLeftAnimation);
 
         this.setDrawing("idleDown");
     }
