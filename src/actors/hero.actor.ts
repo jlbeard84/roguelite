@@ -1,14 +1,29 @@
-import { Actor, CollisionType, Input } from "excalibur";
+import { Actor, CollisionType, Input, Animation } from "excalibur";
 
 import { Game, InputManager } from "../engine";
 import { Direction } from "../enums";
-import { CharacterIdleSpriteSheet } from "../spritesheets";
+import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
 const startingHeroHitPoints: number = 10;
 var playerInput : InputManager;
+const idleAnimationSpeed: number = 240;
+const attackAnimationSpeed: number = 100;
+<<<<<<< HEAD
+
+=======
+
+>>>>>>> 96df2a3ff71c27cfc62d9eb6688c41fd105af090
 
 export class Hero extends GameCharacterBase {
+
+    public directionFacing: Direction;
+    public isAttacking: boolean = false;
+
+    private attackDownAnimation: Animation;
+    private attackRightAnimation: Animation;
+    private attackUpAnimation: Animation;
+    private attackLeftAnimation: Animation;
 
     constructor() {
         super(startingHeroHitPoints);
@@ -23,38 +38,93 @@ export class Hero extends GameCharacterBase {
         const characterSheet = new CharacterIdleSpriteSheet(
             resources);
 
+        const attackSheet = new CharacterAttackSpriteSheet(
+            resources)
+
         const idleDownAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleDownIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleRightAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleRightIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleUpAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleUpIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleLeftAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleLeftIndices(),
-            240);
+            idleAnimationSpeed);
+
+        this.attackDownAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getDownIndices(),
+            attackAnimationSpeed);
+
+        this.attackRightAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getRightIndices(),
+            attackAnimationSpeed);
+
+        this.attackUpAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getUpIndices(),
+            attackAnimationSpeed);
+
+        this.attackLeftAnimation = attackSheet.getAnimationByIndices(
+            game,
+            attackSheet.getLeftIndices(),
+            attackAnimationSpeed);
+
+        this.attackDownAnimation.loop = false;
+        this.attackLeftAnimation.loop = false;
+        this.attackUpAnimation.loop = false;
+        this.attackRightAnimation.loop = false;
 
         this.addDrawing("idleDown", idleDownAnimation);
         this.addDrawing("idleRight", idleRightAnimation);
         this.addDrawing("idleUp", idleUpAnimation);
         this.addDrawing("idleLeft", idleLeftAnimation);
 
+        this.addDrawing("attackDown", this.attackDownAnimation);
+        this.addDrawing("attackRight", this.attackRightAnimation);
+        this.addDrawing("attackUp", this.attackUpAnimation);
+        this.addDrawing("attackLeft", this.attackLeftAnimation);
+
         this.setDrawing("idleDown");
-        
+        this.directionFacing = Direction.Down;
         playerInput = new InputManager();
         game.add(playerInput);
+<<<<<<< HEAD
+        
+     
+=======
+      
+>>>>>>> 96df2a3ff71c27cfc62d9eb6688c41fd105af090
     }
 
     public update(game: Game, delta: number): void {
+
+        if (this.isAttacking) {
+            if (this.directionFacing == Direction.Down && this.attackDownAnimation.isDone()) {
+                this.setDrawing("idleDown");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Right && this.attackRightAnimation.isDone()) {
+                this.setDrawing("idleRight");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Up && this.attackUpAnimation.isDone()) {
+                this.setDrawing("idleUp");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Left && this.attackLeftAnimation.isDone()) {
+                this.setDrawing("idleLeft");
+                this.isAttacking = false;
+            }   
+        }
 
         if (!this.hasActiveTurn) {
             return;
@@ -64,6 +134,7 @@ export class Hero extends GameCharacterBase {
 
         if (playerInput.upPressed) {
             this.setDrawing("idleUp");
+            this.directionFacing = Direction.Up;
 
             if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
                 this.y -= movementAmount;
@@ -73,6 +144,7 @@ export class Hero extends GameCharacterBase {
         
         if (playerInput.downPressed) {
             this.setDrawing("idleDown");
+            this.directionFacing = Direction.Down;
             
             if(this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
                 this.y += movementAmount;
@@ -82,6 +154,7 @@ export class Hero extends GameCharacterBase {
 
         if (playerInput.leftPressed) {
             this.setDrawing("idleLeft");
+            this.directionFacing = Direction.Left;
             
             if(this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
                 this.x -= movementAmount;
@@ -91,11 +164,35 @@ export class Hero extends GameCharacterBase {
 
         if (playerInput.rightPressed) {
             this.setDrawing("idleRight");
+            this.directionFacing = Direction.Right;
             
             if(this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
                 this.x += movementAmount;
                 this.endTurn();
             }
+        }
+
+        if (game.input.keyboard.wasPressed(Input.Keys.Space)) {
+            
+            switch(this.directionFacing) {
+                case Direction.Down:
+                    this.setDrawing("attackDown");
+                    break;
+                case Direction.Right:
+                    this.setDrawing("attackRight");
+                    break;
+                case Direction.Up:
+                    this.setDrawing("attackUp");
+                    break;
+                case Direction.Left:
+                    this.setDrawing("attackLeft");
+                    break;
+            }
+
+            this.isAttacking = true;
+
+            //do collision logic here
+            this.endTurn();
         }
 
         this.movementDistance += movementAmount;
