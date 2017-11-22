@@ -25,5 +25,6 @@ export class SceneManager {
 
         game.add("CaveScene", this.currentScene);
         game.goToScene("CaveScene");
+        game.currentScene.camera.zoom(2);
     }
 }

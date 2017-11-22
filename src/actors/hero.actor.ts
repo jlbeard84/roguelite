@@ -15,6 +15,8 @@ export class Hero extends GameCharacterBase {
 
     public onInitialize(game: Game) {
 
+        this.displayName = "Hero";
+
         const resources = game.loader.resources;
 
         const characterSheet = new CharacterIdleSpriteSheet(
@@ -54,54 +56,59 @@ export class Hero extends GameCharacterBase {
             return;
         }
 
-        let movementAmount: number = 0;
+        let movementAmount: number = 16; //tileset size
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Up) || game.input.keyboard.isHeld(Input.Keys.Up)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
             this.setDrawing("idleUp");
 
-            if(this.passesMapCollision(game, Direction.Up)) {
-                movementAmount = this.calcMovementAmount(delta);
+            if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
                 this.y -= movementAmount;
+                this.endTurn();
             }
         }
         
-        if (game.input.keyboard.wasPressed(Input.Keys.Down) || game.input.keyboard.isHeld(Input.Keys.Down)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
             this.setDrawing("idleDown");
             
-            if(this.passesMapCollision(game, Direction.Down)) {
-                movementAmount = this.calcMovementAmount(delta);
+            if(this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
                 this.y += movementAmount;
+                this.endTurn();
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Left) || game.input.keyboard.isHeld(Input.Keys.Left)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
             this.setDrawing("idleLeft");
             
-            if(this.passesMapCollision(game, Direction.Left)) {
-                movementAmount = this.calcMovementAmount(delta);
+            if(this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
                 this.x -= movementAmount;
+                this.endTurn();
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Right) || game.input.keyboard.isHeld(Input.Keys.Right)) {
+        if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
             this.setDrawing("idleRight");
             
-            if(this.passesMapCollision(game, Direction.Right)) {
-                movementAmount = this.calcMovementAmount(delta);
+            if(this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
                 this.x += movementAmount;
+                this.endTurn();
             }
         }
 
         this.movementDistance += movementAmount;
 
-        if (this.movementDistance > this.movementSpeed) {
-            this.hasActiveTurn = false;
-            this.emit(this.turnEndedEventName);
-        }
+        //if (this.movementDistance > this.movementSpeed) {
+        //    this.hasActiveTurn = false;
+        //    this.emit(this.turnEndedEventName);
+        //}
     }
 
     public resetTurn(): void {
         this.hasActiveTurn = true;
         this.movementDistance = 0;
+    }
+
+    endTurn(): void {
+        this.hasActiveTurn = false;
+        this.emit(this.turnEndedEventName);
     }
 }

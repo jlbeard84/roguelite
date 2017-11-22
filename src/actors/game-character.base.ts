@@ -1,5 +1,6 @@
-import { Actor, CollisionType, Input } from "excalibur";
+import { Actor, CollisionType, Input, Ray, Vector, Cell } from "excalibur";
 
+import { Hero } from "./"
 import { Game } from "../engine";
 import { Direction } from "../enums";
 
@@ -8,12 +9,15 @@ export abstract class GameCharacterBase extends Actor {
     public hasActiveTurn: boolean;
     public turnEndedEventName: string = "turnEnded";
     
+    public displayName: string = "";
     public hitPoints: number;
     public maxHitPoints: number;
 
     protected movementDistance: number = 0;
     protected movementSpeed: number = 16;
     protected deltaModifier: number = 0.01;
+
+    public lastTile: Cell;
 
     constructor(maxHitPoints?: number) {
         super();
@@ -34,6 +38,41 @@ export abstract class GameCharacterBase extends Actor {
     protected  calcMovementAmount(delta: number): number {
         return this.movementSpeed * (delta * this.deltaModifier);
     }
+
+    protected passesActorCollision(
+        game: Game,
+        direction: Direction): boolean {
+        
+        var notBlocked : boolean = true;
+
+        game.currentScene.actors.forEach(ele => {
+            switch(direction) {
+                case Direction.Up:
+                    if(this.pos.y - 16 == ele.pos.y && this.pos.x == ele.pos.x){
+                       notBlocked = false;
+                    }
+                    break;
+                case Direction.Down:
+                    if(this.pos.y + 16 == ele.pos.y && this.pos.x == ele.pos.x){
+                       notBlocked = false;
+                    }
+                    break;
+                case Direction.Left:
+                    if(this.pos.x - 16 == ele.pos.x && this.pos.y == ele.pos.y){
+                        notBlocked = false;
+                    }
+                    break;
+                case Direction.Right:
+                    if(this.pos.x + 16 == ele.pos.x && this.pos.y == ele.pos.y){
+                        notBlocked = false;
+                    }
+                    break;
+            }
+        });
+
+        return notBlocked;
+    }
+    
 
     protected passesMapCollision(
         game: Game,
@@ -61,6 +100,8 @@ export abstract class GameCharacterBase extends Actor {
             let targetTileMap = game.currentScene.tileMaps[0];
 
             let targetCell = targetTileMap.getCellByPoint(this.x + xOffset, this.y + yOffset);
+
+            //let lastTile = targetTileMap.getCellByPoint(this.x, this.y);
 
             if (!targetCell || targetCell.solid) {
                 return false;
