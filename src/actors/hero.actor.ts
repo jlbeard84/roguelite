@@ -1,4 +1,4 @@
-import { Actor, CollisionType, Input } from "excalibur";
+import { Actor, CollisionType, Input, Animation } from "excalibur";
 
 import { Game } from "../engine";
 import { Direction } from "../enums";
@@ -6,8 +6,18 @@ import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../sprites
 import { GameCharacterBase } from "./";
 
 const startingHeroHitPoints: number = 10;
+const idleAnimationSpeed: number = 240;
+const attackAnimationSpeed: number = 100;
 
 export class Hero extends GameCharacterBase {
+
+    public directionFacing: Direction;
+    public isAttacking: boolean = false;
+
+    private attackDownAnimation: Animation;
+    private attackRightAnimation: Animation;
+    private attackUpAnimation: Animation;
+    private attackLeftAnimation: Animation;
 
     constructor() {
         super(startingHeroHitPoints);
@@ -28,57 +38,79 @@ export class Hero extends GameCharacterBase {
         const idleDownAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleDownIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleRightAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleRightIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleUpAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleUpIndices(),
-            240);
+            idleAnimationSpeed);
 
         const idleLeftAnimation = characterSheet.getAnimationByIndices(
             game, 
             characterSheet.getIdleLeftIndices(),
-            240);
+            idleAnimationSpeed);
 
-        const attackDownAnimation = attackSheet.getAnimationByIndices(
+        this.attackDownAnimation = attackSheet.getAnimationByIndices(
             game,
             attackSheet.getDownIndices(),
-            240);
+            attackAnimationSpeed);
 
-        const attackRightAnimation = attackSheet.getAnimationByIndices(
+        this.attackRightAnimation = attackSheet.getAnimationByIndices(
             game,
             attackSheet.getRightIndices(),
-            240);
+            attackAnimationSpeed);
 
-        const attackUpAnimation = attackSheet.getAnimationByIndices(
+        this.attackUpAnimation = attackSheet.getAnimationByIndices(
             game,
             attackSheet.getUpIndices(),
-            240);
+            attackAnimationSpeed);
 
-        const attackLeftAnimation = attackSheet.getAnimationByIndices(
+        this.attackLeftAnimation = attackSheet.getAnimationByIndices(
             game,
             attackSheet.getLeftIndices(),
-            240);
+            attackAnimationSpeed);
+
+        this.attackDownAnimation.loop = false;
+        this.attackLeftAnimation.loop = false;
+        this.attackUpAnimation.loop = false;
+        this.attackRightAnimation.loop = false;
 
         this.addDrawing("idleDown", idleDownAnimation);
         this.addDrawing("idleRight", idleRightAnimation);
         this.addDrawing("idleUp", idleUpAnimation);
         this.addDrawing("idleLeft", idleLeftAnimation);
 
-        this.addDrawing("attackDown", attackDownAnimation);
-        this.addDrawing("attackRight", attackRightAnimation);
-        this.addDrawing("attackUp", attackUpAnimation);
-        this.addDrawing("attackKeft", attackLeftAnimation);
+        this.addDrawing("attackDown", this.attackDownAnimation);
+        this.addDrawing("attackRight", this.attackRightAnimation);
+        this.addDrawing("attackUp", this.attackUpAnimation);
+        this.addDrawing("attackLeft", this.attackLeftAnimation);
 
         this.setDrawing("idleDown");
+        this.directionFacing = Direction.Down;
     }
 
     public update(game: Game, delta: number): void {
+
+        if (this.isAttacking) {
+            if (this.directionFacing == Direction.Down && this.attackDownAnimation.isDone()) {
+                this.setDrawing("idleDown");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Right && this.attackRightAnimation.isDone()) {
+                this.setDrawing("idleRight");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Up && this.attackUpAnimation.isDone()) {
+                this.setDrawing("idleUp");
+                this.isAttacking = false;
+            } else if (this.directionFacing == Direction.Left && this.attackLeftAnimation.isDone()) {
+                this.setDrawing("idleLeft");
+                this.isAttacking = false;
+            }   
+        }
 
         if (!this.hasActiveTurn) {
             return;
@@ -88,6 +120,7 @@ export class Hero extends GameCharacterBase {
 
         if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
             this.setDrawing("idleUp");
+            this.directionFacing = Direction.Up;
 
             if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
                 this.y -= movementAmount;
@@ -97,6 +130,7 @@ export class Hero extends GameCharacterBase {
         
         if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
             this.setDrawing("idleDown");
+            this.directionFacing = Direction.Down;
             
             if(this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
                 this.y += movementAmount;
@@ -106,6 +140,7 @@ export class Hero extends GameCharacterBase {
 
         if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
             this.setDrawing("idleLeft");
+            this.directionFacing = Direction.Left;
             
             if(this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
                 this.x -= movementAmount;
@@ -115,11 +150,35 @@ export class Hero extends GameCharacterBase {
 
         if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
             this.setDrawing("idleRight");
+            this.directionFacing = Direction.Right;
             
             if(this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
                 this.x += movementAmount;
                 this.endTurn();
             }
+        }
+
+        if (game.input.keyboard.wasPressed(Input.Keys.Space)) {
+            
+            switch(this.directionFacing) {
+                case Direction.Down:
+                    this.setDrawing("attackDown");
+                    break;
+                case Direction.Right:
+                    this.setDrawing("attackRight");
+                    break;
+                case Direction.Up:
+                    this.setDrawing("attackUp");
+                    break;
+                case Direction.Left:
+                    this.setDrawing("attackLeft");
+                    break;
+            }
+
+            this.isAttacking = true;
+
+            //do collision logic here
+            this.endTurn();
         }
 
         this.movementDistance += movementAmount;
