@@ -35,6 +35,15 @@ export abstract class GameCharacterBase extends Actor {
         this.movementDistance = 0;
     }
 
+    public takeDamage(baseDamage: number): void {
+        //do stuff with damage calc
+        this.hitPoints -= baseDamage;
+
+        if (this.hitPoints <= 0) {
+            this.kill();
+        }
+    }
+
     protected  calcMovementAmount(delta: number): number {
         return this.movementSpeed * (delta * this.deltaModifier);
     }

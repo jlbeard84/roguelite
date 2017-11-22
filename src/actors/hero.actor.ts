@@ -4,6 +4,7 @@ import { Game } from "../engine";
 import { Direction } from "../enums";
 import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
+import { LevelSceneBase } from "../scenes/level-scene.base";
 
 const startingHeroHitPoints: number = 10;
 const idleAnimationSpeed: number = 240;
@@ -177,7 +178,38 @@ export class Hero extends GameCharacterBase {
 
             this.isAttacking = true;
 
-            //do collision logic here
+            //TODO: get this from equipped weapon
+            const attackRange = 4;
+            const attackDamage = 5;
+
+            if (game.currentScene instanceof LevelSceneBase) {
+
+                console.log("Checking collisions");
+
+                const enemies = game.currentScene.enemies;
+
+                for (let i = 0; i < enemies.length; i++) {
+
+                    let enemyRange: number = 0;
+
+                    //fix this calc
+                    if (this.directionFacing == Direction.Down) {
+                        //enemyRange = enemies[i].y - this.y
+                    } else if (this.directionFacing == Direction.Right) {
+                        //enemyRange = this.y - enemies[i].y;
+                    } else if (this.directionFacing == Direction.Up) {
+                        //enemyRange = this.y - enemies[i].y;
+                    } else if (this.directionFacing == Direction.Left) {
+                        //enemyRange = enemies[i].x - this.x;
+                    }
+
+                    if (enemyRange > 0 && enemyRange <= attackRange) {
+                        console.log(enemies[i], "Taking Damage");
+                        enemies[i].takeDamage(attackDamage);
+                    }
+                }
+            }
+
             this.endTurn();
         }
 
