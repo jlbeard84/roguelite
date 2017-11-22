@@ -1,11 +1,12 @@
 import { Actor, CollisionType, Input } from "excalibur";
 
-import { Game } from "../engine";
+import { Game, InputManager } from "../engine";
 import { Direction } from "../enums";
 import { CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
 const startingHeroHitPoints: number = 10;
+var playerInput : InputManager;
 
 export class Hero extends GameCharacterBase {
 
@@ -48,6 +49,9 @@ export class Hero extends GameCharacterBase {
         this.addDrawing("idleLeft", idleLeftAnimation);
 
         this.setDrawing("idleDown");
+        
+        playerInput = new InputManager();
+        game.add(playerInput);
     }
 
     public update(game: Game, delta: number): void {
@@ -58,7 +62,7 @@ export class Hero extends GameCharacterBase {
 
         let movementAmount: number = 16; //tileset size
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
+        if (playerInput.upPressed) {
             this.setDrawing("idleUp");
 
             if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {

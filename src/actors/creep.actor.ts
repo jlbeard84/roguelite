@@ -13,7 +13,7 @@ export class Creep extends GameCharacterBase {
     private highHitPointRange = 5;
 
     private chaseDistance: number = 640;
-    private idleTurnThreshold: number = 1;
+    private idleTurnThreshold: number = 0;
     private idleTurns: number = 0;
 
     constructor() {
@@ -126,7 +126,7 @@ export class Creep extends GameCharacterBase {
         this.movementDistance = movementAmount;
         this.idleTurns++;
 
-        if (this.movementDistance > this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {
+        if (this.movementDistance >= this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {
             this.hasActiveTurn = false;
             this.idleTurns = 0;
             this.emit(this.turnEndedEventName);
