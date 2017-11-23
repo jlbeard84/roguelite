@@ -9,6 +9,8 @@ export abstract class GameCharacterBase extends Actor {
     public hasActiveTurn: boolean;
     public turnEndedEventName: string = "turnEnded";
     
+    public adjacentToHero: boolean = false;
+
     public displayName: string = "";
     public hitPoints: number;
     public maxHitPoints: number;
@@ -63,6 +65,9 @@ export abstract class GameCharacterBase extends Actor {
                     //if(targetCell.getBounds().contains(ele.pos) && targetCell){
                     //    console.log(ele);
                     if(this.pos.x == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
                         notBlocked = false;
                     }
                     break;
@@ -73,6 +78,9 @@ export abstract class GameCharacterBase extends Actor {
                     //if(targetCell.getBounds().contains(ele.pos) && targetCell){
                     //    console.log(ele);
                     if(this.pos.x == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
                         notBlocked = false;
                     }
                     break;
@@ -83,6 +91,9 @@ export abstract class GameCharacterBase extends Actor {
                     //if(targetCell.getBounds().contains(ele.pos)){
                     //    console.log(ele);
                     if(this.pos.x + xOffset == ele.pos.x && this.pos.y == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
                         notBlocked = false;
                     }
                     break;
@@ -93,9 +104,52 @@ export abstract class GameCharacterBase extends Actor {
                     //if(targetCell.getBounds().contains(ele.pos)){
                     //    console.log(ele);
                     if(this.pos.x + xOffset == ele.pos.x && this.pos.y == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
                         notBlocked = false;
                     }
                     break;
+                 case Direction.UpLeft:
+                    xOffset = -16;
+                    yOffset = -16;
+                    if(this.pos.x + xOffset == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
+                        notBlocked = false;
+                    }
+                    break;
+                case Direction.UpRight:
+                    xOffset = 16;
+                    yOffset = -16;
+                    if(this.pos.x + xOffset == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
+                        notBlocked = false;
+                    }
+                    break;
+                case Direction.DownLeft:
+                    xOffset = -16;
+                    yOffset = 16;
+                    if(this.pos.x + xOffset == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
+                        notBlocked = false;
+                    }
+                    break;
+                case Direction.DownRight:
+                    xOffset = 16;
+                    yOffset = 16;
+                    if(this.pos.x + xOffset == ele.pos.x && this.pos.y + yOffset == ele.pos.y){
+                        if(ele instanceof Hero){
+                            this.adjacentToHero = true;
+                        }
+                        notBlocked = false;
+                    }
+                    break; 
             }
         }
         });

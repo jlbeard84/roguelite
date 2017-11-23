@@ -9,11 +9,6 @@ const startingHeroHitPoints: number = 10;
 var playerInput : InputManager;
 const idleAnimationSpeed: number = 240;
 const attackAnimationSpeed: number = 100;
-<<<<<<< HEAD
-
-=======
-
->>>>>>> 96df2a3ff71c27cfc62d9eb6688c41fd105af090
 
 export class Hero extends GameCharacterBase {
 
@@ -100,12 +95,7 @@ export class Hero extends GameCharacterBase {
         this.directionFacing = Direction.Down;
         playerInput = new InputManager();
         game.add(playerInput);
-<<<<<<< HEAD
-        
-     
-=======
-      
->>>>>>> 96df2a3ff71c27cfc62d9eb6688c41fd105af090
+
     }
 
     public update(game: Game, delta: number): void {

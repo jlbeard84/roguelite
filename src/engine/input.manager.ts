@@ -18,6 +18,9 @@ export class InputManager extends Actor {
     protected kbAccept : Input.Keys = Input.Keys.Z;
     protected kbCancel : Input.Keys = Input.Keys.X;
 
+    protected firstRep : number = 750;
+    protected secondRep : number = 150;
+
     private keyTimer : number = 0;
     private firstPress : boolean = false;
     private keyHeld : boolean = false;
@@ -48,14 +51,14 @@ export class InputManager extends Actor {
         if(game.input.keyboard.isHeld(this.lastKey)){
             this.keyTimer += delta;
         }
-        
+
         if(!this.firstPress){
-            if(this.keyTimer > 150){
+            if(this.keyTimer > this.secondRep){
                 this.Depress(this.lastKey);
             }
         }
         else{
-            if(this.keyTimer > 750){
+            if(this.keyTimer > this.firstRep){
                 this.firstPress = false;
                 this.Depress(this.lastKey);
             }
