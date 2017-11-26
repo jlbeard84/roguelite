@@ -1,4 +1,4 @@
-import { Actor, CollisionType, Input, Ray, Vector, Cell } from "excalibur";
+import { Actor, CollisionType, Input, Ray, Vector, Cell, SpriteSheet } from "excalibur";
 
 import { Hero } from "./"
 import { Game } from "../engine";

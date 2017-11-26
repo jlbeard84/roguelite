@@ -74,13 +74,6 @@ export class Creep extends GameCharacterBase {
 
         const hero = currentScene.hero;
 
-        if(this.adjacentToHero){
-            this.hasActiveTurn = false;
-            this.idleTurns = 0;
-            this.emit(this.turnEndedEventName);
-            return;
-        }
-
         const impassibleDirections: Direction[] = []
         
         for (let i = 1; i < 9; i++) {
@@ -95,6 +88,13 @@ export class Creep extends GameCharacterBase {
         const movementDirection: Direction = this.determineMovementDirection(
             hero, 
             impassibleDirections);
+
+        if(this.adjacentToHero){
+            this.hasActiveTurn = false;
+            this.idleTurns = 0;
+            this.emit(this.turnEndedEventName);
+            return;
+        }
         
         if(movementDirection == null){
             this.hasActiveTurn = false;
@@ -137,6 +137,38 @@ export class Creep extends GameCharacterBase {
             }
         }
 
+        if (movementDirection == Direction.UpRight) {
+            console.log("UR");
+            if (impassibleDirections.indexOf(Direction.UpRight) == -1) {
+                this.x += movementAmount;
+                this.y -= movementAmount;
+            }
+        }
+
+        if (movementDirection == Direction.UpLeft) {
+            console.log("UL");
+            if (impassibleDirections.indexOf(Direction.UpLeft) == -1) {
+                this.x -= movementAmount;
+                this.y -= movementAmount;
+            }
+        }
+
+        if (movementDirection == Direction.DownRight) {
+            console.log("DR");
+            if (impassibleDirections.indexOf(Direction.DownRight) == -1) {
+                this.x += movementAmount;
+                this.y += movementAmount;
+            }
+        }
+
+        if (movementDirection == Direction.DownLeft) {
+            console.log("DL");
+            if(impassibleDirections.indexOf(Direction.DownLeft) == -1){
+                this.x -= movementAmount;
+                this.y += movementAmount;
+            }
+        }
+
         this.movementDistance = movementAmount;
         
         this.idleTurns++;
@@ -163,8 +195,9 @@ export class Creep extends GameCharacterBase {
 
         const absXDistance = Math.abs(xDistance);
         const absYDistance = Math.abs(yDistance);
+        
 
-        if (absYDistance >= absXDistance) {
+        if (absYDistance > absXDistance) {
             if (yDistance >= this.chaseDistance * -1 || yDistance <= this.chaseDistance) {
                 if (yDistance >= 0 && impassibleDirections.indexOf(Direction.Up) == -1) {
                     return Direction.Up;
@@ -186,7 +219,7 @@ export class Creep extends GameCharacterBase {
             }  
         } 
         
-        if (absXDistance >= absYDistance) {
+        else if (absXDistance > absYDistance) {
             if((xDistance >= this.chaseDistance * -1 || xDistance <= this.chaseDistance)) {
                 if (xDistance >= 0 && impassibleDirections.indexOf(Direction.Left) == -1) {
                     return Direction.Left;
@@ -208,6 +241,32 @@ export class Creep extends GameCharacterBase {
                 }
             }
         } 
+        else if (absXDistance == absYDistance) { //diagonal
+
+            if((xDistance >= this.chaseDistance * -1 || xDistance <= this.chaseDistance)) {
+                if(yDistance >= this.chaseDistance * -1 || yDistance <= this.chaseDistance){
+
+                    if(xDistance > 0){
+                        if(yDistance > 0 && impassibleDirections.indexOf(Direction.UpLeft) == -1) {
+                            return Direction.UpLeft;
+                        }
+                        else if(yDistance < 0 && impassibleDirections.indexOf(Direction.DownLeft) == -1) {
+                            return Direction.DownLeft;
+                        }
+                    }
+                   
+                    else if(xDistance < 0){
+                        if(yDistance > 0 && impassibleDirections.indexOf(Direction.UpRight) == -1) {
+                            return Direction.UpRight;
+                        }
+                        else if(yDistance < 0 && impassibleDirections.indexOf(Direction.DownRight) == -1) {
+                            return Direction.DownRight;
+                        }
+                    }
+
+                }
+            }
+        }
 
         return null;
         //return Math.floor(Math.random() * 4) + 1;

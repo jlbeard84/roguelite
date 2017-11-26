@@ -1,7 +1,11 @@
 import { Game } from "./game.engine";
 import { Actor, Input } from "excalibur";
+import { Keyboard } from "Input/Index";
+import { InputMode } from "../enums";
 
 export class InputManager extends Actor {
+
+    public currentMode : InputMode;
 
     public downPressed : boolean;
     public upPressed : boolean;
@@ -15,7 +19,7 @@ export class InputManager extends Actor {
     protected kbDown : Input.Keys = Input.Keys.Down;
     protected kbLeft : Input.Keys = Input.Keys.Left;
     protected kbRight : Input.Keys = Input.Keys.Right;
-    protected kbAccept : Input.Keys = Input.Keys.Z;
+    protected kbAccept : Input.Keys = Input.Keys.Space;
     protected kbCancel : Input.Keys = Input.Keys.X;
 
     protected firstRep : number = 750;
@@ -29,28 +33,35 @@ export class InputManager extends Actor {
 
     public update(game: Game, delta: number): void {
 
-        this.UnPressKeys();
+		this.UnPressKeys();
+		
+        if(this.currentMode != InputMode.noInput){
+									
+			if(game.input.keyboard.wasPressed(this.kbUp)){
+				this.lastKey = this.kbUp;
+				this.FirstDepress(this.lastKey);
+			}
+			else if(game.input.keyboard.wasPressed(this.kbDown)){
+				this.lastKey = this.kbDown;
+				this.FirstDepress(this.lastKey);
+			}
+			else if(game.input.keyboard.wasPressed(this.kbLeft)){
+				this.lastKey = this.kbLeft;
+				this.FirstDepress(this.lastKey);
+			}
+			else if(game.input.keyboard.wasPressed(this.kbRight)){
+				this.lastKey = this.kbRight;
+				this.FirstDepress(this.lastKey);
+			}
 
-        if(game.input.keyboard.wasPressed(this.kbUp)){
-            this.lastKey = this.kbUp;
-            this.FirstDepress(this.lastKey);
-        }
-        else if(game.input.keyboard.wasPressed(this.kbDown)){
-            this.lastKey = this.kbDown;
-            this.FirstDepress(this.lastKey);
-        }
-        else if(game.input.keyboard.wasPressed(this.kbLeft)){
-            this.lastKey = this.kbLeft;
-            this.FirstDepress(this.lastKey);
-        }
-        else if(game.input.keyboard.wasPressed(this.kbRight)){
-            this.lastKey = this.kbRight;
-            this.FirstDepress(this.lastKey);
-        }
+			if(game.input.keyboard.wasPressed(this.kbAccept)){
+				this.FirstDepress(this.kbAccept);
+			}
 
-        if(game.input.keyboard.isHeld(this.lastKey)){
-            this.keyTimer += delta;
-        }
+			if(game.input.keyboard.isHeld(this.lastKey)){
+				this.keyTimer += delta;
+			}
+   	    }
 
         if(!this.firstPress){
             if(this.keyTimer > this.secondRep){
@@ -94,6 +105,11 @@ export class InputManager extends Actor {
             this.rightPressed = true;
             this.keyTimer = 0;
         }
+
+        if(key == this.kbAccept){
+            this.aPressed = true;
+            //No key timer / repeat for now.
+        }
     }
 
     private UnPressKeys(){
@@ -101,5 +117,6 @@ export class InputManager extends Actor {
         this.downPressed = false;
         this.leftPressed = false;
         this.rightPressed = false;
+        this.aPressed = false;
     }
 }

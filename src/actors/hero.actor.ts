@@ -1,7 +1,7 @@
 import { Actor, CollisionType, Input, Animation } from "excalibur";
 
 import { Game, InputManager } from "../engine";
-import { Direction } from "../enums";
+import { Direction, InputMode } from "../enums";
 import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
@@ -93,9 +93,10 @@ export class Hero extends GameCharacterBase {
 
         this.setDrawing("idleDown");
         this.directionFacing = Direction.Down;
+
         playerInput = new InputManager();
         game.add(playerInput);
-
+        playerInput.currentMode = InputMode.readyForAction;
     }
 
     public update(game: Game, delta: number): void {
@@ -104,15 +105,19 @@ export class Hero extends GameCharacterBase {
             if (this.directionFacing == Direction.Down && this.attackDownAnimation.isDone()) {
                 this.setDrawing("idleDown");
                 this.isAttacking = false;
+                playerInput.currentMode = InputMode.readyForAction;
             } else if (this.directionFacing == Direction.Right && this.attackRightAnimation.isDone()) {
                 this.setDrawing("idleRight");
                 this.isAttacking = false;
+                playerInput.currentMode = InputMode.readyForAction;
             } else if (this.directionFacing == Direction.Up && this.attackUpAnimation.isDone()) {
                 this.setDrawing("idleUp");
                 this.isAttacking = false;
+                playerInput.currentMode = InputMode.readyForAction;
             } else if (this.directionFacing == Direction.Left && this.attackLeftAnimation.isDone()) {
                 this.setDrawing("idleLeft");
                 this.isAttacking = false;
+                playerInput.currentMode = InputMode.readyForAction;
             }   
         }
 
@@ -127,7 +132,7 @@ export class Hero extends GameCharacterBase {
             this.directionFacing = Direction.Up;
 
             if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
-                this.y -= movementAmount;
+                this.actions.moveBy(this.x, this.y -= movementAmount, 500);
                 this.endTurn();
             }
         }
@@ -162,8 +167,10 @@ export class Hero extends GameCharacterBase {
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Space)) {
-            
+        if (playerInput.aPressed) {
+
+            playerInput.currentMode = InputMode.noInput;
+
             switch(this.directionFacing) {
                 case Direction.Down:
                     this.setDrawing("attackDown");
