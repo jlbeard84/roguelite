@@ -1,11 +1,12 @@
 import { Actor, CollisionType, Input, Animation } from "excalibur";
 
-import { Game } from "../engine";
+import { Game, InputManager } from "../engine";
 import { Direction } from "../enums";
 import { CharacterAttackSpriteSheet, CharacterIdleSpriteSheet } from "../spritesheets";
 import { GameCharacterBase } from "./";
 
 const startingHeroHitPoints: number = 10;
+var playerInput : InputManager;
 const idleAnimationSpeed: number = 240;
 const attackAnimationSpeed: number = 100;
 
@@ -92,6 +93,9 @@ export class Hero extends GameCharacterBase {
 
         this.setDrawing("idleDown");
         this.directionFacing = Direction.Down;
+        playerInput = new InputManager();
+        game.add(playerInput);
+
     }
 
     public update(game: Game, delta: number): void {
@@ -118,7 +122,7 @@ export class Hero extends GameCharacterBase {
 
         let movementAmount: number = 16; //tileset size
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Up)) {
+        if (playerInput.upPressed) {
             this.setDrawing("idleUp");
             this.directionFacing = Direction.Up;
 
@@ -128,7 +132,7 @@ export class Hero extends GameCharacterBase {
             }
         }
         
-        if (game.input.keyboard.wasPressed(Input.Keys.Down)) {
+        if (playerInput.downPressed) {
             this.setDrawing("idleDown");
             this.directionFacing = Direction.Down;
             
@@ -138,7 +142,7 @@ export class Hero extends GameCharacterBase {
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Left)) {
+        if (playerInput.leftPressed) {
             this.setDrawing("idleLeft");
             this.directionFacing = Direction.Left;
             
@@ -148,7 +152,7 @@ export class Hero extends GameCharacterBase {
             }
         }
 
-        if (game.input.keyboard.wasPressed(Input.Keys.Right)) {
+        if (playerInput.rightPressed) {
             this.setDrawing("idleRight");
             this.directionFacing = Direction.Right;
             

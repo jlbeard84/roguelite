@@ -13,7 +13,7 @@ export class Creep extends GameCharacterBase {
     private highHitPointRange = 5;
 
     private chaseDistance: number = 640;
-    private idleTurnThreshold: number = 1;
+    private idleTurnThreshold: number = 0;
     private idleTurns: number = 0;
 
     constructor() {
@@ -74,9 +74,16 @@ export class Creep extends GameCharacterBase {
 
         const hero = currentScene.hero;
 
+        if(this.adjacentToHero){
+            this.hasActiveTurn = false;
+            this.idleTurns = 0;
+            this.emit(this.turnEndedEventName);
+            return;
+        }
+
         const impassibleDirections: Direction[] = []
         
-        for (let i = 1; i < 5; i++) {
+        for (let i = 1; i < 9; i++) {
             if (!this.passesMapCollision(game, i)) {
                 impassibleDirections.push(i);
             }
@@ -84,10 +91,17 @@ export class Creep extends GameCharacterBase {
                 impassibleDirections.push(i);
             }
         }
-
+        
         const movementDirection: Direction = this.determineMovementDirection(
             hero, 
             impassibleDirections);
+        
+        if(movementDirection == null){
+            this.hasActiveTurn = false;
+            this.idleTurns = 0;
+            this.emit(this.turnEndedEventName);
+            return;
+        }
 
         let movementAmount: number = 16;
 
@@ -124,9 +138,10 @@ export class Creep extends GameCharacterBase {
         }
 
         this.movementDistance = movementAmount;
+        
         this.idleTurns++;
 
-        if (this.movementDistance > this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {
+        if (this.movementDistance >= this.movementSpeed || this.idleTurns >= this.idleTurnThreshold) {
             this.hasActiveTurn = false;
             this.idleTurns = 0;
             this.emit(this.turnEndedEventName);
@@ -194,6 +209,7 @@ export class Creep extends GameCharacterBase {
             }
         } 
 
-        return Math.floor(Math.random() * 4) + 1;
+        return null;
+        //return Math.floor(Math.random() * 4) + 1;
     }
 }
