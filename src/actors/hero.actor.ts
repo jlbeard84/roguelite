@@ -126,7 +126,7 @@ export class Hero extends GameCharacterBase {
             this.setDrawing("idleUp");
             this.directionFacing = Direction.Up;
 
-            if(this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
+            if(!playerInput.turnPressed && this.passesMapCollision(game, Direction.Up) && this.passesActorCollision(game, Direction.Up)) {
                 this.y -= movementAmount;
                 this.endTurn();
             }
@@ -136,7 +136,7 @@ export class Hero extends GameCharacterBase {
             this.setDrawing("idleDown");
             this.directionFacing = Direction.Down;
             
-            if(this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
+            if(!playerInput.turnPressed && this.passesMapCollision(game, Direction.Down) && this.passesActorCollision(game, Direction.Down)) {
                 this.y += movementAmount;
                 this.endTurn();
             }
@@ -146,7 +146,7 @@ export class Hero extends GameCharacterBase {
             this.setDrawing("idleLeft");
             this.directionFacing = Direction.Left;
             
-            if(this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
+            if(!playerInput.turnPressed && this.passesMapCollision(game, Direction.Left) && this.passesActorCollision(game, Direction.Left)) {
                 this.x -= movementAmount;
                 this.endTurn();
             }
@@ -156,7 +156,7 @@ export class Hero extends GameCharacterBase {
             this.setDrawing("idleRight");
             this.directionFacing = Direction.Right;
             
-            if(this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
+            if(!playerInput.turnPressed && this.passesMapCollision(game, Direction.Right) && this.passesActorCollision(game, Direction.Right)) {
                 this.x += movementAmount;
                 this.endTurn();
             }

@@ -7,6 +7,7 @@ export class InputManager extends Actor {
     public upPressed : boolean;
     public leftPressed : boolean;
     public rightPressed : boolean;
+    public turnPressed : boolean;
 
     public aPressed : boolean;
     public bPressed : boolean;
@@ -17,6 +18,7 @@ export class InputManager extends Actor {
     protected kbRight : Input.Keys = Input.Keys.Right;
     protected kbAccept : Input.Keys = Input.Keys.Z;
     protected kbCancel : Input.Keys = Input.Keys.X;
+    protected kbShift : Input.Keys = Input.Keys.Shift;
 
     protected firstRep : number = 750;
     protected secondRep : number = 150;
@@ -30,6 +32,11 @@ export class InputManager extends Actor {
     public update(game: Game, delta: number): void {
 
         this.UnPressKeys();
+
+        if (game.input.keyboard.wasPressed(this.kbShift) || game.input.keyboard.isHeld(this.kbShift))
+        {
+            this.turnPressed = true;
+        }
 
         if(game.input.keyboard.wasPressed(this.kbUp)){
             this.lastKey = this.kbUp;
@@ -101,5 +108,6 @@ export class InputManager extends Actor {
         this.downPressed = false;
         this.leftPressed = false;
         this.rightPressed = false;
+        this.turnPressed = false;
     }
 }
