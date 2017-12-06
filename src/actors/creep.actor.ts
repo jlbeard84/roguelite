@@ -78,6 +78,7 @@ export class Creep extends GameCharacterBase {
             this.hasActiveTurn = false;
             this.idleTurns = 0;
             this.emit(this.turnEndedEventName);
+            this.adjacentToHero = false;
             return;
         }
 
