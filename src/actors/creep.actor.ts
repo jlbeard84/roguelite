@@ -79,6 +79,12 @@ export class Creep extends GameCharacterBase {
             this.idleTurns = 0;
             this.emit(this.turnEndedEventName);
             this.adjacentToHero = false;
+
+            let faceDirection = this.determineMovementDirection(
+                hero);
+
+            this.setDirectionAnimation(faceDirection);
+
             return;
         }
 
@@ -106,33 +112,27 @@ export class Creep extends GameCharacterBase {
 
         let movementAmount: number = 16;
 
-        if (movementDirection == Direction.Up) {
-            this.setDrawing("idleUp");
+        this.setDirectionAnimation(movementDirection);
 
+        if (movementDirection == Direction.Up) {
             if (impassibleDirections.indexOf(Direction.Up) == -1) {
                 this.y -= movementAmount;
             }
         } 
         
         if (movementDirection == Direction.Down) {
-            this.setDrawing("idleDown");
-            
             if (impassibleDirections.indexOf(Direction.Down) == -1) {
                 this.y += movementAmount;
             }
         } 
         
         if (movementDirection == Direction.Left) {
-            this.setDrawing("idleLeft");
-            
             if (impassibleDirections.indexOf(Direction.Left) == -1) {
                 this.x -= movementAmount;
             }
         } 
         
         if (movementDirection == Direction.Right) {
-            this.setDrawing("idleRight");
-            
             if (impassibleDirections.indexOf(Direction.Right) == -1) {
                 this.x += movementAmount;
             }
@@ -212,5 +212,27 @@ export class Creep extends GameCharacterBase {
 
         return null;
         //return Math.floor(Math.random() * 4) + 1;
+    }
+
+    public setDirectionAnimation(direction: Direction) {
+        if (direction == Direction.Up) {
+            this.setDrawing("idleUp");
+            return;
+        } 
+        
+        if (direction == Direction.Down) {
+            this.setDrawing("idleDown");
+            return;
+        } 
+        
+        if (direction == Direction.Left) {
+            this.setDrawing("idleLeft");
+            return;
+        } 
+        
+        if (direction == Direction.Right) {
+            this.setDrawing("idleRight");
+            return;
+        }
     }
 }
